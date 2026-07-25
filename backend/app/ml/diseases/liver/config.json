@@ -1,0 +1,144 @@
+{
+  "slug": "liver",
+  "name": "Liver Disease",
+  "category": "Organ Disease",
+  "icon": "liver",
+  "short_description": "Risk of liver dysfunction from bilirubin and liver enzyme panel.",
+  "overview": "Liver disease refers to any condition that damages the liver and affects its function, ranging from hepatitis to cirrhosis. Blood enzyme levels are the earliest indicator of liver stress.",
+  "risk_factors": [
+    "Alcohol use",
+    "Obesity",
+    "Hepatitis B/C infection",
+    "Diabetes",
+    "Family history",
+    "Certain medications"
+  ],
+  "common_symptoms": [
+    "Jaundice",
+    "Abdominal pain/swelling",
+    "Nausea",
+    "Dark urine",
+    "Chronic fatigue"
+  ],
+  "recommended_tests": [
+    "Liver Function Test (LFT)",
+    "Ultrasound Abdomen",
+    "Hepatitis Panel",
+    "Liver Biopsy"
+  ],
+  "recommended_specialist": "Hepatologist / Gastroenterologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 1,
+      "max": 100,
+      "default": 45,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "gender",
+      "label": "Gender",
+      "type": "categorical",
+      "categories": [
+        "male",
+        "female"
+      ],
+      "default": "male",
+      "ocr_aliases": [
+        "gender"
+      ]
+    },
+    {
+      "name": "total_bilirubin",
+      "label": "Total Bilirubin",
+      "type": "numeric",
+      "unit": "mg/dl",
+      "min": 0.1,
+      "max": 20,
+      "default": 1.0,
+      "ocr_aliases": [
+        "total bilirubin"
+      ]
+    },
+    {
+      "name": "direct_bilirubin",
+      "label": "Direct Bilirubin",
+      "type": "numeric",
+      "unit": "mg/dl",
+      "min": 0.0,
+      "max": 10,
+      "default": 0.3,
+      "ocr_aliases": [
+        "direct bilirubin"
+      ]
+    },
+    {
+      "name": "alkaline_phosphotase",
+      "label": "Alkaline Phosphotase",
+      "type": "numeric",
+      "unit": "IU/L",
+      "min": 60,
+      "max": 900,
+      "default": 200,
+      "ocr_aliases": [
+        "alkaline phosphotase"
+      ]
+    },
+    {
+      "name": "alamine_aminotransferase",
+      "label": "ALT (SGPT)",
+      "type": "numeric",
+      "unit": "IU/L",
+      "min": 5,
+      "max": 400,
+      "default": 30,
+      "ocr_aliases": [
+        "alt (sgpt)"
+      ]
+    },
+    {
+      "name": "aspartate_aminotransferase",
+      "label": "AST (SGOT)",
+      "type": "numeric",
+      "unit": "IU/L",
+      "min": 5,
+      "max": 400,
+      "default": 30,
+      "ocr_aliases": [
+        "ast (sgot)"
+      ]
+    },
+    {
+      "name": "albumin",
+      "label": "Albumin",
+      "type": "numeric",
+      "unit": "g/dl",
+      "min": 1.5,
+      "max": 6,
+      "default": 4.0,
+      "ocr_aliases": [
+        "albumin"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "total_bilirubin": 0.35,
+    "direct_bilirubin": 0.5,
+    "alkaline_phosphotase": 0.003,
+    "alamine_aminotransferase": 0.01,
+    "aspartate_aminotransferase": 0.01,
+    "albumin": -0.5,
+    "age": 0.015
+  },
+  "synthetic_base_rate": 0.28
+}

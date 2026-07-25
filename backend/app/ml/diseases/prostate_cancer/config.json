@@ -1,0 +1,104 @@
+{
+  "slug": "prostate_cancer",
+  "name": "Prostate Cancer",
+  "category": "Cancer",
+  "icon": "ribbon",
+  "short_description": "Prostate cancer risk from PSA levels and clinical indicators.",
+  "overview": "Prostate cancer develops in the prostate gland in men and is one of the most common cancers in older men. Elevated PSA (prostate-specific antigen) is the primary early screening marker.",
+  "risk_factors": [
+    "Age over 50",
+    "Family history",
+    "African ancestry",
+    "Obesity",
+    "High-fat diet"
+  ],
+  "common_symptoms": [
+    "Frequent urination (esp. at night)",
+    "Weak urine stream",
+    "Blood in urine/semen",
+    "Pelvic discomfort"
+  ],
+  "recommended_tests": [
+    "PSA Blood Test",
+    "Digital Rectal Exam (DRE)",
+    "Prostate Biopsy",
+    "MRI"
+  ],
+  "recommended_specialist": "Urologist / Oncologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 30,
+      "max": 100,
+      "default": 55,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "psa_level",
+      "label": "PSA Level",
+      "type": "numeric",
+      "unit": "ng/ml",
+      "min": 0.1,
+      "max": 50,
+      "default": 2.0,
+      "ocr_aliases": [
+        "psa level"
+      ]
+    },
+    {
+      "name": "family_history",
+      "label": "Family History (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "family history (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "prostate_volume",
+      "label": "Prostate Volume",
+      "type": "numeric",
+      "unit": "cc",
+      "min": 15,
+      "max": 150,
+      "default": 35,
+      "ocr_aliases": [
+        "prostate volume"
+      ]
+    },
+    {
+      "name": "dre_abnormal",
+      "label": "Abnormal DRE Finding (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "abnormal dre finding (1=yes,0=no)"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "age": 0.025,
+    "psa_level": 0.15,
+    "family_history__1": 0.7,
+    "dre_abnormal__1": 1.2
+  },
+  "synthetic_base_rate": 0.1
+}

@@ -1,0 +1,138 @@
+{
+  "slug": "stroke",
+  "name": "Stroke",
+  "category": "Cardiovascular",
+  "icon": "brain",
+  "short_description": "Risk of ischemic or hemorrhagic stroke from vascular and lifestyle factors.",
+  "overview": "A stroke occurs when blood supply to part of the brain is interrupted or reduced, depriving brain tissue of oxygen. It is a medical emergency; early risk detection allows preventive treatment of underlying hypertension, atrial fibrillation, and cholesterol.",
+  "risk_factors": [
+    "Hypertension",
+    "Heart disease",
+    "Diabetes",
+    "Smoking",
+    "Obesity",
+    "Age over 55",
+    "Atrial fibrillation"
+  ],
+  "common_symptoms": [
+    "Sudden numbness/weakness one side",
+    "Confusion",
+    "Trouble speaking",
+    "Vision problems",
+    "Severe headache"
+  ],
+  "recommended_tests": [
+    "CT Scan Brain",
+    "MRI Brain",
+    "Carotid Ultrasound",
+    "ECG",
+    "Lipid Profile"
+  ],
+  "recommended_specialist": "Neurologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 1,
+      "max": 100,
+      "default": 45,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "gender",
+      "label": "Gender",
+      "type": "categorical",
+      "categories": [
+        "male",
+        "female"
+      ],
+      "default": "male",
+      "ocr_aliases": [
+        "gender"
+      ]
+    },
+    {
+      "name": "hypertension",
+      "label": "Hypertension (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "hypertension (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "heart_disease",
+      "label": "Heart Disease (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "heart disease (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "avg_glucose_level",
+      "label": "Average Glucose Level",
+      "type": "numeric",
+      "unit": "mg/dl",
+      "min": 50,
+      "max": 300,
+      "default": 100,
+      "ocr_aliases": [
+        "average glucose level"
+      ]
+    },
+    {
+      "name": "bmi",
+      "label": "BMI",
+      "type": "numeric",
+      "unit": "kg/m2",
+      "min": 10,
+      "max": 60,
+      "default": 25,
+      "ocr_aliases": [
+        "bmi"
+      ]
+    },
+    {
+      "name": "smoking_status",
+      "label": "Smoking Status",
+      "type": "categorical",
+      "categories": [
+        "never",
+        "formerly",
+        "current"
+      ],
+      "default": "never",
+      "ocr_aliases": [
+        "smoking status"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "age": 0.03,
+    "hypertension__1": 1.2,
+    "heart_disease__1": 1.1,
+    "avg_glucose_level": 0.01,
+    "bmi": 0.02,
+    "smoking_status__current": 0.8,
+    "smoking_status__formerly": 0.3
+  },
+  "synthetic_base_rate": 0.06
+}

@@ -1,0 +1,137 @@
+{
+  "slug": "lung_cancer",
+  "name": "Lung Cancer",
+  "category": "Cancer",
+  "icon": "lungs",
+  "short_description": "Lung cancer risk from smoking history and respiratory symptoms.",
+  "overview": "Lung cancer begins in the cells of the lungs, most commonly caused by long-term exposure to tobacco smoke. Symptoms often appear only after the disease has progressed, making risk screening in smokers especially important.",
+  "risk_factors": [
+    "Smoking",
+    "Secondhand smoke exposure",
+    "Radon exposure",
+    "Asbestos exposure",
+    "Family history",
+    "Age over 50"
+  ],
+  "common_symptoms": [
+    "Persistent cough",
+    "Coughing up blood",
+    "Chest pain",
+    "Hoarseness",
+    "Unexplained weight loss",
+    "Shortness of breath"
+  ],
+  "recommended_tests": [
+    "Low-Dose CT Scan",
+    "Chest X-Ray",
+    "Sputum Cytology",
+    "Bronchoscopy",
+    "Biopsy"
+  ],
+  "recommended_specialist": "Pulmonologist / Oncologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 18,
+      "max": 100,
+      "default": 50,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "gender",
+      "label": "Gender",
+      "type": "categorical",
+      "categories": [
+        "male",
+        "female"
+      ],
+      "default": "male",
+      "ocr_aliases": [
+        "gender"
+      ]
+    },
+    {
+      "name": "smoking",
+      "label": "Smoking (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "smoking (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "smoking_years",
+      "label": "Years Smoking",
+      "type": "numeric",
+      "unit": "years",
+      "min": 0,
+      "max": 60,
+      "default": 0,
+      "ocr_aliases": [
+        "years smoking"
+      ]
+    },
+    {
+      "name": "chronic_cough",
+      "label": "Chronic Cough (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "chronic cough (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "chest_pain",
+      "label": "Chest Pain (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "chest pain (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "family_history",
+      "label": "Family History (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "family history (1=yes,0=no)"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "age": 0.02,
+    "smoking__1": 1.4,
+    "smoking_years": 0.03,
+    "chronic_cough__1": 0.6,
+    "chest_pain__1": 0.5,
+    "family_history__1": 0.5
+  },
+  "synthetic_base_rate": 0.1
+}

@@ -1,0 +1,120 @@
+{
+  "slug": "obesity",
+  "name": "Obesity",
+  "category": "Lifestyle Disease",
+  "icon": "activity",
+  "short_description": "Obesity / weight-related metabolic risk from BMI and lifestyle factors.",
+  "overview": "Obesity is excess body fat accumulation that presents a risk to health, driven by an energy imbalance between calories consumed and expended, and is a major risk factor for diabetes, heart disease and joint problems.",
+  "risk_factors": [
+    "Poor diet",
+    "Physical inactivity",
+    "Genetics",
+    "Sleep deprivation",
+    "Stress/emotional eating",
+    "Certain medications"
+  ],
+  "common_symptoms": [
+    "High BMI",
+    "Excess body fat",
+    "Shortness of breath on exertion",
+    "Joint pain",
+    "Fatigue"
+  ],
+  "recommended_tests": [
+    "BMI Calculation",
+    "Waist Circumference",
+    "Body Fat Percentage",
+    "Lipid Profile",
+    "Fasting Glucose"
+  ],
+  "recommended_specialist": "Endocrinologist / Nutritionist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 5,
+      "max": 100,
+      "default": 35,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "height_cm",
+      "label": "Height",
+      "type": "numeric",
+      "unit": "cm",
+      "min": 100,
+      "max": 220,
+      "default": 165,
+      "ocr_aliases": [
+        "height"
+      ]
+    },
+    {
+      "name": "weight_kg",
+      "label": "Weight",
+      "type": "numeric",
+      "unit": "kg",
+      "min": 20,
+      "max": 250,
+      "default": 70,
+      "ocr_aliases": [
+        "weight"
+      ]
+    },
+    {
+      "name": "waist_circumference_cm",
+      "label": "Waist Circumference",
+      "type": "numeric",
+      "unit": "cm",
+      "min": 50,
+      "max": 180,
+      "default": 85,
+      "ocr_aliases": [
+        "waist circumference"
+      ]
+    },
+    {
+      "name": "physical_activity",
+      "label": "Physical Activity",
+      "type": "categorical",
+      "categories": [
+        "sedentary",
+        "moderate",
+        "active"
+      ],
+      "default": "moderate",
+      "ocr_aliases": [
+        "physical activity"
+      ]
+    },
+    {
+      "name": "daily_calorie_intake",
+      "label": "Daily Calorie Intake",
+      "type": "numeric",
+      "unit": "kcal",
+      "min": 800,
+      "max": 5000,
+      "default": 2200,
+      "ocr_aliases": [
+        "daily calorie intake"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "bmi": 0.15,
+    "waist_circumference_cm": 0.03,
+    "physical_activity__sedentary": 0.6,
+    "daily_calorie_intake": 0.0004,
+    "age": 0.005
+  },
+  "synthetic_base_rate": 0.3
+}

@@ -1,0 +1,148 @@
+{
+  "slug": "kidney",
+  "name": "Chronic Kidney Disease",
+  "category": "Organ Disease",
+  "icon": "kidney",
+  "short_description": "Risk of chronic kidney disease from renal function blood/urine markers.",
+  "overview": "Chronic kidney disease (CKD) is the gradual loss of kidney function. Kidneys filter waste and excess fluid from blood; when damaged, waste builds up in the body causing serious complications.",
+  "risk_factors": [
+    "Diabetes",
+    "Hypertension",
+    "Family history",
+    "Obesity",
+    "Smoking",
+    "Age over 60",
+    "Heart disease"
+  ],
+  "common_symptoms": [
+    "Fatigue",
+    "Swelling in legs/ankles",
+    "Foamy urine",
+    "Loss of appetite",
+    "Difficulty concentrating"
+  ],
+  "recommended_tests": [
+    "Serum Creatinine",
+    "Blood Urea Nitrogen",
+    "eGFR",
+    "Urinalysis",
+    "Kidney Ultrasound"
+  ],
+  "recommended_specialist": "Nephrologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 1,
+      "max": 100,
+      "default": 45,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "blood_pressure",
+      "label": "Blood Pressure",
+      "type": "numeric",
+      "unit": "mmHg",
+      "min": 60,
+      "max": 200,
+      "default": 120,
+      "ocr_aliases": [
+        "blood pressure"
+      ]
+    },
+    {
+      "name": "blood_glucose_random",
+      "label": "Random Blood Glucose",
+      "type": "numeric",
+      "unit": "mg/dl",
+      "min": 50,
+      "max": 400,
+      "default": 120,
+      "ocr_aliases": [
+        "random blood glucose"
+      ]
+    },
+    {
+      "name": "blood_urea",
+      "label": "Blood Urea",
+      "type": "numeric",
+      "unit": "mg/dl",
+      "min": 5,
+      "max": 200,
+      "default": 30,
+      "ocr_aliases": [
+        "blood urea"
+      ]
+    },
+    {
+      "name": "serum_creatinine",
+      "label": "Serum Creatinine",
+      "type": "numeric",
+      "unit": "mg/dl",
+      "min": 0.3,
+      "max": 15,
+      "default": 1.0,
+      "ocr_aliases": [
+        "serum creatinine"
+      ]
+    },
+    {
+      "name": "hemoglobin",
+      "label": "Hemoglobin",
+      "type": "numeric",
+      "unit": "g/dl",
+      "min": 3,
+      "max": 18,
+      "default": 13,
+      "ocr_aliases": [
+        "hemoglobin"
+      ]
+    },
+    {
+      "name": "hypertension",
+      "label": "Hypertension (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "hypertension (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "diabetes_mellitus",
+      "label": "Diabetes (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "diabetes (1=yes,0=no)"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "age": 0.02,
+    "blood_pressure": 0.015,
+    "blood_glucose_random": 0.006,
+    "blood_urea": 0.02,
+    "serum_creatinine": 0.5,
+    "hemoglobin": -0.15,
+    "hypertension__1": 0.8,
+    "diabetes_mellitus__1": 0.7
+  },
+  "synthetic_base_rate": 0.15
+}

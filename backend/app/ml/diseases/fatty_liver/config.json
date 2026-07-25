@@ -1,0 +1,118 @@
+{
+  "slug": "fatty_liver",
+  "name": "Fatty Liver Disease",
+  "category": "Organ Disease",
+  "icon": "liver",
+  "short_description": "Non-alcoholic fatty liver disease (NAFLD) risk from metabolic markers.",
+  "overview": "Fatty liver disease is the buildup of excess fat in liver cells, strongly linked to obesity, insulin resistance and metabolic syndrome. Early stages are often reversible with lifestyle change.",
+  "risk_factors": [
+    "Obesity",
+    "Type 2 diabetes",
+    "High triglycerides",
+    "Metabolic syndrome",
+    "Sedentary lifestyle",
+    "Alcohol"
+  ],
+  "common_symptoms": [
+    "Fatigue",
+    "Mild right upper abdominal discomfort",
+    "Often asymptomatic"
+  ],
+  "recommended_tests": [
+    "Liver Ultrasound",
+    "Liver Function Test",
+    "Lipid Profile",
+    "FibroScan"
+  ],
+  "recommended_specialist": "Hepatologist / Gastroenterologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 18,
+      "max": 100,
+      "default": 40,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "bmi",
+      "label": "BMI",
+      "type": "numeric",
+      "unit": "kg/m2",
+      "min": 10,
+      "max": 60,
+      "default": 27,
+      "ocr_aliases": [
+        "bmi"
+      ]
+    },
+    {
+      "name": "triglycerides",
+      "label": "Triglycerides",
+      "type": "numeric",
+      "unit": "mg/dl",
+      "min": 30,
+      "max": 600,
+      "default": 150,
+      "ocr_aliases": [
+        "triglycerides"
+      ]
+    },
+    {
+      "name": "fasting_glucose",
+      "label": "Fasting Glucose",
+      "type": "numeric",
+      "unit": "mg/dl",
+      "min": 50,
+      "max": 300,
+      "default": 100,
+      "ocr_aliases": [
+        "fasting glucose"
+      ]
+    },
+    {
+      "name": "alt",
+      "label": "ALT (SGPT)",
+      "type": "numeric",
+      "unit": "IU/L",
+      "min": 5,
+      "max": 400,
+      "default": 30,
+      "ocr_aliases": [
+        "alt (sgpt)"
+      ]
+    },
+    {
+      "name": "alcohol_use",
+      "label": "Alcohol Use",
+      "type": "categorical",
+      "categories": [
+        "never",
+        "occasional",
+        "regular"
+      ],
+      "default": "never",
+      "ocr_aliases": [
+        "alcohol use"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "bmi": 0.06,
+    "triglycerides": 0.006,
+    "fasting_glucose": 0.008,
+    "alt": 0.015,
+    "alcohol_use__regular": 0.6,
+    "age": 0.01
+  },
+  "synthetic_base_rate": 0.22
+}

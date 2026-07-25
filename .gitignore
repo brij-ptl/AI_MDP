@@ -1,0 +1,57 @@
+# ============================
+# FRONTEND (Next.js / TypeScript)
+# ============================
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.env.local
+frontend/.env*.local
+frontend/next-env.d.ts
+frontend/*.tsbuildinfo
+frontend/.vercel
+frontend/coverage/
+
+# ============================
+# BACKEND (FastAPI / Python)
+# ============================
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.py[cod]
+backend/.venv/
+backend/venv/
+backend/env/
+backend/.env
+backend/*.env
+
+# runtime-generated, not source
+backend/app/uploads/reports/*
+backend/app/uploads/images/*
+backend/app/uploads/temp/*
+!backend/app/uploads/**/.gitkeep
+backend/app/static/generated_reports/*
+!backend/app/static/generated_reports/.gitkeep
+
+# logs
+backend/*.log
+backend/logs/
+backend/app.log
+
+# local database (if using SQLite in dev)
+backend/*.db
+backend/*.sqlite3
+
+# ML models & datasets — large binaries, see note below
+backend/trained_models/**/*
+backend/datasets/**/*
+!backend/trained_models/**/.gitkeep
+!backend/datasets/**/.gitkeep
+
+# ============================
+# SHARED / EDITOR / OS
+# ============================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

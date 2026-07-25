@@ -1,0 +1,121 @@
+{
+  "slug": "parkinsons",
+  "name": "Parkinson's Disease",
+  "category": "Neurological",
+  "icon": "brain",
+  "short_description": "Parkinson's disease risk from vocal/motor tremor indicators.",
+  "overview": "Parkinson's disease is a progressive nervous system disorder affecting movement, often starting with barely noticeable tremors. Subtle changes in voice (jitter, shimmer) are a well-studied early biomarker used alongside motor examination.",
+  "risk_factors": [
+    "Age over 60",
+    "Family history",
+    "Male gender",
+    "Pesticide exposure",
+    "Head injury history"
+  ],
+  "common_symptoms": [
+    "Tremor at rest",
+    "Slowed movement (bradykinesia)",
+    "Muscle rigidity",
+    "Balance problems",
+    "Soft/slurred speech",
+    "Reduced facial expression"
+  ],
+  "recommended_tests": [
+    "Neurological Examination",
+    "DaTscan (Dopamine Transporter Scan)",
+    "MRI Brain",
+    "Voice Analysis"
+  ],
+  "recommended_specialist": "Neurologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 30,
+      "max": 100,
+      "default": 60,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "voice_jitter_percent",
+      "label": "Voice Jitter (%)",
+      "type": "numeric",
+      "unit": "%",
+      "min": 0,
+      "max": 5,
+      "default": 0.5,
+      "ocr_aliases": [
+        "voice jitter (%)"
+      ]
+    },
+    {
+      "name": "voice_shimmer_db",
+      "label": "Voice Shimmer (dB)",
+      "type": "numeric",
+      "unit": "dB",
+      "min": 0,
+      "max": 2,
+      "default": 0.2,
+      "ocr_aliases": [
+        "voice shimmer (db)"
+      ]
+    },
+    {
+      "name": "tremor",
+      "label": "Resting Tremor (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "resting tremor (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "rigidity",
+      "label": "Muscle Rigidity (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "muscle rigidity (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "family_history",
+      "label": "Family History (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "family history (1=yes,0=no)"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "age": 0.03,
+    "voice_jitter_percent": 0.5,
+    "voice_shimmer_db": 0.9,
+    "tremor__1": 1.3,
+    "rigidity__1": 1.0,
+    "family_history__1": 0.6
+  },
+  "synthetic_base_rate": 0.09
+}

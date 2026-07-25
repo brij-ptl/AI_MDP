@@ -1,0 +1,10 @@
+{
+  "name": "Vitalis AI - Precision Healthcare Platform",
+  "short_name": "Vitalis AI",
+  "description": "AI-powered multi-disease prediction and health screening platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080B16",
+  "theme_color": "#22D3EE",
+  "icons": []
+}

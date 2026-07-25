@@ -1,0 +1,133 @@
+{
+  "slug": "thyroid",
+  "name": "Thyroid Disease",
+  "category": "Endocrine",
+  "icon": "thyroid",
+  "short_description": "Hypo/hyperthyroidism risk from TSH, T3, T4 hormone panel.",
+  "overview": "Thyroid disease affects the small gland in the neck that regulates metabolism via hormones (TSH, T3, T4). Both underactive (hypothyroidism) and overactive (hyperthyroidism) states cause wide-ranging metabolic symptoms.",
+  "risk_factors": [
+    "Family history",
+    "Autoimmune disease",
+    "Female gender",
+    "Iodine deficiency/excess",
+    "Age over 60"
+  ],
+  "common_symptoms": [
+    "Fatigue",
+    "Weight change",
+    "Cold/heat intolerance",
+    "Hair thinning",
+    "Neck swelling (goiter)",
+    "Mood changes"
+  ],
+  "recommended_tests": [
+    "TSH Test",
+    "Free T3 / Free T4",
+    "Thyroid Ultrasound",
+    "Thyroid Antibody Test"
+  ],
+  "recommended_specialist": "Endocrinologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 1,
+      "max": 100,
+      "default": 40,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "gender",
+      "label": "Gender",
+      "type": "categorical",
+      "categories": [
+        "male",
+        "female"
+      ],
+      "default": "female",
+      "ocr_aliases": [
+        "gender"
+      ]
+    },
+    {
+      "name": "tsh",
+      "label": "TSH Level",
+      "type": "numeric",
+      "unit": "mIU/L",
+      "min": 0.01,
+      "max": 50,
+      "default": 2.5,
+      "ocr_aliases": [
+        "tsh level"
+      ]
+    },
+    {
+      "name": "t3",
+      "label": "T3 Level",
+      "type": "numeric",
+      "unit": "ng/dl",
+      "min": 40,
+      "max": 300,
+      "default": 120,
+      "ocr_aliases": [
+        "t3 level"
+      ]
+    },
+    {
+      "name": "t4",
+      "label": "T4 Level",
+      "type": "numeric",
+      "unit": "ug/dl",
+      "min": 1,
+      "max": 20,
+      "default": 8,
+      "ocr_aliases": [
+        "t4 level"
+      ]
+    },
+    {
+      "name": "goiter",
+      "label": "Goiter Present (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "goiter present (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "family_history",
+      "label": "Family History (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "family history (1=yes,0=no)"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "tsh": 0.09,
+    "t3": -0.004,
+    "t4": -0.05,
+    "goiter__1": 0.9,
+    "family_history__1": 0.5,
+    "age": 0.01
+  },
+  "synthetic_base_rate": 0.18
+}

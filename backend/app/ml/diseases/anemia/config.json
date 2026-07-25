@@ -1,0 +1,119 @@
+{
+  "slug": "anemia",
+  "name": "Anemia",
+  "category": "Blood Disorder",
+  "icon": "droplet",
+  "short_description": "Anemia risk from complete blood count (CBC) indicators.",
+  "overview": "Anemia is a condition where the blood lacks enough healthy red blood cells or hemoglobin to carry adequate oxygen to body tissues, most commonly caused by iron deficiency, chronic disease, or blood loss.",
+  "risk_factors": [
+    "Iron-poor diet",
+    "Heavy menstrual periods",
+    "Pregnancy",
+    "Chronic disease",
+    "GI bleeding",
+    "Vitamin B12/folate deficiency"
+  ],
+  "common_symptoms": [
+    "Fatigue",
+    "Pale skin",
+    "Shortness of breath",
+    "Dizziness",
+    "Cold hands/feet",
+    "Rapid heartbeat"
+  ],
+  "recommended_tests": [
+    "Complete Blood Count (CBC)",
+    "Serum Ferritin",
+    "Vitamin B12 / Folate Levels",
+    "Peripheral Smear"
+  ],
+  "recommended_specialist": "Hematologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 1,
+      "max": 100,
+      "default": 35,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "gender",
+      "label": "Gender",
+      "type": "categorical",
+      "categories": [
+        "male",
+        "female"
+      ],
+      "default": "female",
+      "ocr_aliases": [
+        "gender"
+      ]
+    },
+    {
+      "name": "hemoglobin",
+      "label": "Hemoglobin",
+      "type": "numeric",
+      "unit": "g/dl",
+      "min": 3,
+      "max": 18,
+      "default": 12.5,
+      "ocr_aliases": [
+        "hemoglobin"
+      ]
+    },
+    {
+      "name": "mcv",
+      "label": "Mean Corpuscular Volume (MCV)",
+      "type": "numeric",
+      "unit": "fL",
+      "min": 50,
+      "max": 120,
+      "default": 88,
+      "ocr_aliases": [
+        "mean corpuscular volume (mcv)"
+      ]
+    },
+    {
+      "name": "rbc_count",
+      "label": "RBC Count",
+      "type": "numeric",
+      "unit": "million/uL",
+      "min": 2,
+      "max": 7,
+      "default": 4.5,
+      "ocr_aliases": [
+        "rbc count"
+      ]
+    },
+    {
+      "name": "ferritin",
+      "label": "Serum Ferritin",
+      "type": "numeric",
+      "unit": "ng/ml",
+      "min": 2,
+      "max": 300,
+      "default": 60,
+      "ocr_aliases": [
+        "serum ferritin"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "hemoglobin": -0.9,
+    "mcv": -0.03,
+    "rbc_count": -0.4,
+    "ferritin": -0.01,
+    "gender__female": 0.3
+  },
+  "synthetic_base_rate": 0.2
+}

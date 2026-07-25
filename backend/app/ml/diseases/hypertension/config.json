@@ -1,0 +1,121 @@
+{
+  "slug": "hypertension",
+  "name": "Hypertension",
+  "category": "Cardiovascular",
+  "icon": "activity",
+  "short_description": "Risk of high blood pressure from lifestyle, weight and family history.",
+  "overview": "Hypertension is persistently elevated pressure in the arteries. It usually has no symptoms but significantly raises the risk of heart attack, stroke and kidney disease if untreated.",
+  "risk_factors": [
+    "Obesity",
+    "High salt intake",
+    "Sedentary lifestyle",
+    "Alcohol",
+    "Stress",
+    "Family history",
+    "Age"
+  ],
+  "common_symptoms": [
+    "Usually asymptomatic",
+    "Headache",
+    "Dizziness",
+    "Nosebleeds (severe cases)"
+  ],
+  "recommended_tests": [
+    "Blood Pressure Monitoring",
+    "ECG",
+    "Kidney Function Test",
+    "Lipid Profile"
+  ],
+  "recommended_specialist": "Cardiologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 18,
+      "max": 100,
+      "default": 40,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "bmi",
+      "label": "BMI",
+      "type": "numeric",
+      "unit": "kg/m2",
+      "min": 10,
+      "max": 60,
+      "default": 25,
+      "ocr_aliases": [
+        "bmi"
+      ]
+    },
+    {
+      "name": "salt_intake_g",
+      "label": "Daily Salt Intake",
+      "type": "numeric",
+      "unit": "g/day",
+      "min": 2,
+      "max": 20,
+      "default": 8,
+      "ocr_aliases": [
+        "daily salt intake"
+      ]
+    },
+    {
+      "name": "family_history",
+      "label": "Family History (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "family history (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "physical_activity",
+      "label": "Physical Activity",
+      "type": "categorical",
+      "categories": [
+        "sedentary",
+        "moderate",
+        "active"
+      ],
+      "default": "moderate",
+      "ocr_aliases": [
+        "physical activity"
+      ]
+    },
+    {
+      "name": "stress_level",
+      "label": "Stress Level (0-10)",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 10,
+      "default": 5,
+      "ocr_aliases": [
+        "stress level (0-10)"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "age": 0.025,
+    "bmi": 0.04,
+    "salt_intake_g": 0.06,
+    "family_history__1": 0.9,
+    "physical_activity__sedentary": 0.7,
+    "stress_level": 0.08
+  },
+  "synthetic_base_rate": 0.25
+}

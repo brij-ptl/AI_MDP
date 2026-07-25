@@ -1,0 +1,119 @@
+{
+  "slug": "cervical_cancer",
+  "name": "Cervical Cancer",
+  "category": "Cancer",
+  "icon": "ribbon",
+  "short_description": "Cervical cancer risk from HPV, screening and lifestyle history.",
+  "overview": "Cervical cancer develops in the cells of the cervix, most often caused by persistent infection with high-risk strains of human papillomavirus (HPV). Regular screening (Pap smear) catches precancerous changes early.",
+  "risk_factors": [
+    "HPV infection",
+    "Multiple sexual partners",
+    "Smoking",
+    "Weakened immune system",
+    "Long-term oral contraceptive use"
+  ],
+  "common_symptoms": [
+    "Abnormal vaginal bleeding",
+    "Pelvic pain",
+    "Pain during intercourse",
+    "Unusual discharge"
+  ],
+  "recommended_tests": [
+    "Pap Smear",
+    "HPV DNA Test",
+    "Colposcopy",
+    "Biopsy"
+  ],
+  "recommended_specialist": "Gynecologic Oncologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 15,
+      "max": 90,
+      "default": 35,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "num_sexual_partners",
+      "label": "Number of Sexual Partners",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 20,
+      "default": 2,
+      "ocr_aliases": [
+        "number of sexual partners"
+      ]
+    },
+    {
+      "name": "smoking",
+      "label": "Smoking (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "smoking (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "hpv_test_result",
+      "label": "HPV Test Positive (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "hpv test positive (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "std_history",
+      "label": "STD History (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "std history (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "first_sexual_intercourse_age",
+      "label": "Age at First Intercourse",
+      "type": "numeric",
+      "unit": "years",
+      "min": 12,
+      "max": 40,
+      "default": 20,
+      "ocr_aliases": [
+        "age at first intercourse"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "num_sexual_partners": 0.08,
+    "smoking__1": 0.5,
+    "hpv_test_result__1": 1.8,
+    "std_history__1": 0.6,
+    "first_sexual_intercourse_age": -0.05,
+    "age": 0.01
+  },
+  "synthetic_base_rate": 0.08
+}

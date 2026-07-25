@@ -1,0 +1,38 @@
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+pydantic==2.10.3
+pydantic-settings==2.7.0
+sqlalchemy==2.0.36
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.2.1
+python-multipart==0.0.19
+email-validator==2.2.0
+
+# ML
+scikit-learn==1.5.2
+pandas==2.2.3
+numpy==1.26.4
+joblib==1.4.2
+
+# Explainability (optional, used by app/ml/explainable_ai)
+shap==0.46.0
+lime==0.2.0.1
+
+# OCR / document parsing
+pdfplumber==0.11.4
+pytesseract==0.3.13
+pdf2image==1.17.0
+Pillow==11.0.0
+
+# PDF report generation + charts
+reportlab==4.2.5
+matplotlib==3.9.3
+
+# Payments
+razorpay==1.4.2
+setuptools==70.3.0   # razorpay SDK still imports pkg_resources; newer setuptools drops it
+
+# Misc
+python-dotenv==1.0.1
+aiofiles==24.1.0

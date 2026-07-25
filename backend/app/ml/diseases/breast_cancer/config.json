@@ -1,0 +1,159 @@
+{
+  "slug": "breast_cancer",
+  "name": "Breast Cancer",
+  "category": "Cancer",
+  "icon": "ribbon",
+  "short_description": "Malignancy risk from digitized fine needle aspirate (FNA) cell nuclei measurements.",
+  "overview": "Breast cancer arises when cells in breast tissue grow uncontrollably. This module screens using the size, shape and texture characteristics of cell nuclei captured from a fine needle aspirate (FNA) biopsy image \u2014 the same features radiologists and pathologists inspect under a microscope.",
+  "risk_factors": [
+    "Family history",
+    "Age over 50",
+    "BRCA1/BRCA2 gene mutation",
+    "Early menstruation",
+    "Late menopause",
+    "Obesity",
+    "Alcohol use",
+    "Never having children"
+  ],
+  "common_symptoms": [
+    "Breast lump or thickening",
+    "Change in breast shape",
+    "Nipple discharge",
+    "Skin dimpling",
+    "Nipple retraction"
+  ],
+  "recommended_tests": [
+    "Mammography",
+    "Breast Ultrasound",
+    "Fine Needle Aspiration (FNA) Biopsy",
+    "MRI"
+  ],
+  "recommended_specialist": "Oncologist",
+  "algorithm": "logistic_regression",
+  "data_source": "public_dataset",
+  "dataset_url": "sklearn_builtin:breast_cancer",
+  "target": "target",
+  "positive_value": 0,
+  "feature_schema": [
+    {
+      "name": "mean_radius",
+      "label": "Mean Radius",
+      "type": "numeric",
+      "unit": "",
+      "min": 5,
+      "max": 30,
+      "default": 14,
+      "ocr_aliases": [
+        "radius"
+      ]
+    },
+    {
+      "name": "mean_texture",
+      "label": "Mean Texture",
+      "type": "numeric",
+      "unit": "",
+      "min": 5,
+      "max": 40,
+      "default": 19,
+      "ocr_aliases": [
+        "texture"
+      ]
+    },
+    {
+      "name": "mean_perimeter",
+      "label": "Mean Perimeter",
+      "type": "numeric",
+      "unit": "",
+      "min": 40,
+      "max": 200,
+      "default": 90,
+      "ocr_aliases": [
+        "perimeter"
+      ]
+    },
+    {
+      "name": "mean_area",
+      "label": "Mean Area",
+      "type": "numeric",
+      "unit": "",
+      "min": 140,
+      "max": 2600,
+      "default": 650,
+      "ocr_aliases": [
+        "area"
+      ]
+    },
+    {
+      "name": "mean_smoothness",
+      "label": "Mean Smoothness",
+      "type": "numeric",
+      "unit": "",
+      "min": 0.03,
+      "max": 0.2,
+      "default": 0.1,
+      "ocr_aliases": [
+        "smoothness"
+      ]
+    },
+    {
+      "name": "mean_compactness",
+      "label": "Mean Compactness",
+      "type": "numeric",
+      "unit": "",
+      "min": 0.0,
+      "max": 0.35,
+      "default": 0.1,
+      "ocr_aliases": [
+        "compactness"
+      ]
+    },
+    {
+      "name": "mean_concavity",
+      "label": "Mean Concavity",
+      "type": "numeric",
+      "unit": "",
+      "min": 0.0,
+      "max": 0.45,
+      "default": 0.09,
+      "ocr_aliases": [
+        "concavity"
+      ]
+    },
+    {
+      "name": "mean_concave_points",
+      "label": "Mean Concave Points",
+      "type": "numeric",
+      "unit": "",
+      "min": 0.0,
+      "max": 0.2,
+      "default": 0.05,
+      "ocr_aliases": [
+        "concave points"
+      ]
+    },
+    {
+      "name": "mean_symmetry",
+      "label": "Mean Symmetry",
+      "type": "numeric",
+      "unit": "",
+      "min": 0.1,
+      "max": 0.35,
+      "default": 0.18,
+      "ocr_aliases": [
+        "symmetry"
+      ]
+    },
+    {
+      "name": "mean_fractal_dimension",
+      "label": "Mean Fractal Dimension",
+      "type": "numeric",
+      "unit": "",
+      "min": 0.04,
+      "max": 0.1,
+      "default": 0.06,
+      "ocr_aliases": [
+        "fractal dimension"
+      ]
+    }
+  ]
+}

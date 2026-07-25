@@ -1,0 +1,209 @@
+{
+  "slug": "heart",
+  "name": "Heart Disease",
+  "category": "Cardiovascular",
+  "icon": "heart",
+  "short_description": "Risk of coronary heart disease based on clinical and lifestyle indicators.",
+  "overview": "Coronary heart disease develops when the arteries supplying blood to the heart become narrowed or blocked, usually due to a buildup of fatty plaque (atherosclerosis). Left unmanaged it can lead to angina, heart attack, or heart failure.",
+  "risk_factors": [
+    "High blood pressure",
+    "High cholesterol",
+    "Smoking",
+    "Diabetes",
+    "Obesity",
+    "Sedentary lifestyle",
+    "Family history",
+    "Age over 45 (men) / 55 (women)"
+  ],
+  "common_symptoms": [
+    "Chest pain or tightness",
+    "Shortness of breath",
+    "Fatigue",
+    "Pain radiating to arm/jaw",
+    "Irregular heartbeat"
+  ],
+  "recommended_tests": [
+    "ECG (Electrocardiogram)",
+    "Lipid Profile",
+    "Echocardiogram",
+    "Cardiac Stress Test",
+    "Coronary Angiography"
+  ],
+  "recommended_specialist": "Cardiologist",
+  "algorithm": "random_forest",
+  "data_source": "public_dataset",
+  "dataset_url": "https://raw.githubusercontent.com/kb22/Heart-Disease-Prediction/master/dataset.csv",
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 18,
+      "max": 100,
+      "default": 45,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "sex",
+      "label": "Sex",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "1",
+      "ocr_aliases": [
+        "sex",
+        "gender"
+      ]
+    },
+    {
+      "name": "cp",
+      "label": "Chest Pain Type (0-3)",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 3,
+      "default": 0,
+      "ocr_aliases": [
+        "chest pain type",
+        "cp"
+      ]
+    },
+    {
+      "name": "trestbps",
+      "label": "Resting Blood Pressure",
+      "type": "numeric",
+      "unit": "mmHg",
+      "min": 80,
+      "max": 220,
+      "default": 120,
+      "ocr_aliases": [
+        "resting bp",
+        "trestbps",
+        "bp"
+      ]
+    },
+    {
+      "name": "chol",
+      "label": "Serum Cholesterol",
+      "type": "numeric",
+      "unit": "mg/dl",
+      "min": 100,
+      "max": 600,
+      "default": 200,
+      "ocr_aliases": [
+        "cholesterol",
+        "chol"
+      ]
+    },
+    {
+      "name": "fbs",
+      "label": "Fasting Blood Sugar > 120mg/dl (1=yes,0=no)",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "ocr_aliases": [
+        "fasting blood sugar",
+        "fbs"
+      ]
+    },
+    {
+      "name": "restecg",
+      "label": "Resting ECG Result (0-2)",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 2,
+      "default": 0,
+      "ocr_aliases": [
+        "restecg",
+        "ecg"
+      ]
+    },
+    {
+      "name": "thalach",
+      "label": "Max Heart Rate Achieved",
+      "type": "numeric",
+      "unit": "bpm",
+      "min": 60,
+      "max": 220,
+      "default": 150,
+      "ocr_aliases": [
+        "max heart rate",
+        "thalach"
+      ]
+    },
+    {
+      "name": "exang",
+      "label": "Exercise Induced Angina (1=yes,0=no)",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "ocr_aliases": [
+        "exercise angina",
+        "exang"
+      ]
+    },
+    {
+      "name": "oldpeak",
+      "label": "ST Depression (exercise vs rest)",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 6.2,
+      "default": 1.0,
+      "ocr_aliases": [
+        "oldpeak",
+        "st depression"
+      ]
+    },
+    {
+      "name": "slope",
+      "label": "Slope of Peak Exercise ST (0-2)",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 2,
+      "default": 1,
+      "ocr_aliases": [
+        "slope"
+      ]
+    },
+    {
+      "name": "ca",
+      "label": "Major Vessels Colored by Fluoroscopy (0-3)",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 3,
+      "default": 0,
+      "ocr_aliases": [
+        "ca",
+        "vessels"
+      ]
+    },
+    {
+      "name": "thal",
+      "label": "Thalassemia (1=normal,2=fixed,3=reversible)",
+      "type": "numeric",
+      "unit": "",
+      "min": 1,
+      "max": 3,
+      "default": 2,
+      "ocr_aliases": [
+        "thal",
+        "thalassemia"
+      ]
+    }
+  ]
+}

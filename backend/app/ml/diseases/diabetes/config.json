@@ -1,0 +1,141 @@
+{
+  "slug": "diabetes",
+  "name": "Diabetes",
+  "category": "Metabolic",
+  "icon": "droplet",
+  "short_description": "Type-2 diabetes risk based on glucose metabolism and body measurements.",
+  "overview": "Type 2 diabetes occurs when the body becomes resistant to insulin or doesn't produce enough of it, causing blood glucose levels to rise. Over time this damages blood vessels, nerves, kidneys and eyes.",
+  "risk_factors": [
+    "Obesity",
+    "Sedentary lifestyle",
+    "Family history",
+    "Age over 45",
+    "High blood pressure",
+    "Prior gestational diabetes",
+    "Polycystic ovary syndrome"
+  ],
+  "common_symptoms": [
+    "Increased thirst",
+    "Frequent urination",
+    "Unexplained weight loss",
+    "Fatigue",
+    "Blurred vision",
+    "Slow-healing sores"
+  ],
+  "recommended_tests": [
+    "Fasting Blood Glucose",
+    "HbA1c",
+    "Oral Glucose Tolerance Test",
+    "Lipid Profile"
+  ],
+  "recommended_specialist": "Endocrinologist",
+  "algorithm": "random_forest",
+  "data_source": "public_dataset",
+  "dataset_url": "https://raw.githubusercontent.com/ybifoundation/Dataset/main/Diabetes.csv",
+  "target": "diabetes",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "pregnancies",
+      "label": "Number of Pregnancies",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 17,
+      "default": 1,
+      "ocr_aliases": [
+        "pregnancies"
+      ]
+    },
+    {
+      "name": "glucose",
+      "label": "Plasma Glucose Concentration",
+      "type": "numeric",
+      "unit": "mg/dl",
+      "min": 40,
+      "max": 300,
+      "default": 110,
+      "ocr_aliases": [
+        "glucose",
+        "fasting glucose",
+        "fbs"
+      ]
+    },
+    {
+      "name": "diastolic",
+      "label": "Diastolic Blood Pressure",
+      "type": "numeric",
+      "unit": "mmHg",
+      "min": 40,
+      "max": 140,
+      "default": 70,
+      "ocr_aliases": [
+        "diastolic",
+        "dbp"
+      ]
+    },
+    {
+      "name": "triceps",
+      "label": "Triceps Skin Fold Thickness",
+      "type": "numeric",
+      "unit": "mm",
+      "min": 0,
+      "max": 100,
+      "default": 20,
+      "ocr_aliases": [
+        "triceps",
+        "skin fold"
+      ]
+    },
+    {
+      "name": "insulin",
+      "label": "2-Hour Serum Insulin",
+      "type": "numeric",
+      "unit": "mu U/ml",
+      "min": 0,
+      "max": 900,
+      "default": 80,
+      "ocr_aliases": [
+        "insulin"
+      ]
+    },
+    {
+      "name": "bmi",
+      "label": "Body Mass Index",
+      "type": "numeric",
+      "unit": "kg/m2",
+      "min": 10,
+      "max": 70,
+      "default": 25,
+      "ocr_aliases": [
+        "bmi",
+        "body mass index"
+      ]
+    },
+    {
+      "name": "dpf",
+      "label": "Diabetes Pedigree Function",
+      "type": "numeric",
+      "unit": "",
+      "min": 0.0,
+      "max": 2.5,
+      "default": 0.4,
+      "ocr_aliases": [
+        "diabetes pedigree",
+        "dpf"
+      ]
+    },
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 18,
+      "max": 100,
+      "default": 35,
+      "ocr_aliases": [
+        "age"
+      ]
+    }
+  ]
+}

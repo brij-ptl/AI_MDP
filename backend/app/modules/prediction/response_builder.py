@@ -1,0 +1,90 @@
+"""
+Turns a raw PredictionResult + disease config into a "doctor explaining your result"
+narrative, plus a personalized recommendations list. Deterministic and template-based
+(no external LLM call) so it works fully offline and reproducibly.
+"""
+from __future__ import annotations
+from typing import Any, Dict, List
+
+from app.ml.common.base_predictor import PredictionResult
+
+RISK_OPENERS = {
+    "Low Risk": "Based on the values you've provided, your results currently fall within a "
+                "low-risk range for {disease}.",
+    "Moderate Risk": "Your results show a moderate risk of {disease}. This isn't a diagnosis, "
+                      "but a few of your values are outside the typical healthy range and are worth attention.",
+    "High Risk": "Your results indicate a high risk of {disease}. Several of your values are "
+                 "significantly outside the typical healthy range.",
+    "Critical Risk": "Your results indicate a critical risk level for {disease}. This combination "
+                      "of values is strongly associated with disease presence in our model.",
+}
+
+RISK_CLOSERS = {
+    "Low Risk": "Keep up your current habits and continue routine checkups.",
+    "Moderate Risk": "I'd recommend getting the tests below done and discussing these numbers "
+                      "with a doctor at your next visit, rather than waiting for symptoms to appear.",
+    "High Risk": "I'd strongly recommend booking an appointment with a specialist soon and getting "
+                 "the recommended tests done to confirm or rule this out.",
+    "Critical Risk": "Please treat this as urgent — book a specialist consultation as soon as "
+                      "possible and get the recommended tests done promptly.",
+}
+
+
+def build_doctor_explanation(result: PredictionResult, disease_cfg: Dict[str, Any],
+                              raw_features: Dict[str, Any]) -> str:
+    disease_name = disease_cfg["name"]
+    opener = RISK_OPENERS.get(result.risk_level, RISK_OPENERS["Moderate Risk"]).format(disease=disease_name)
+    closer = RISK_CLOSERS.get(result.risk_level, RISK_CLOSERS["Moderate Risk"])
+
+    factor_sentences = []
+    schema_by_name = {f["name"]: f for f in disease_cfg.get("feature_schema", [])}
+    for item in result.feature_importance[:3]:
+        raw_name = item["feature"].replace(" ", "_")
+        matched = schema_by_name.get(raw_name)
+        label = matched["label"] if matched else item["feature"]
+        value = raw_features.get(raw_name)
+        direction = item["direction"]
+        if value is not None:
+            factor_sentences.append(f"your {label.lower()} of {value} {direction}")
+        else:
+            factor_sentences.append(f"your {label.lower()} {direction}")
+
+    factors_text = ""
+    if factor_sentences:
+        factors_text = " The factors that influenced this result the most were " + \
+                        ", ".join(factor_sentences) + "."
+
+    disclaimer = (" Please remember: this is an AI-generated screening estimate, not a medical "
+                   "diagnosis. Only a licensed physician, supported by proper clinical tests, "
+                   "can confirm this.")
+
+    return f"{opener}{factors_text} {closer}{disclaimer}"
+
+
+def build_recommendations(result: PredictionResult, disease_cfg: Dict[str, Any]) -> List[str]:
+    recs = []
+    risk_factors = disease_cfg.get("risk_factors", [])
+
+    lifestyle_map = {
+        "Smoking": "Consider a structured smoking-cessation program — this is one of the highest-impact changes you can make.",
+        "Obesity": "Gradual, sustainable weight loss (aim for 0.5kg/week) meaningfully lowers risk.",
+        "Sedentary lifestyle": "Aim for at least 150 minutes of moderate exercise per week.",
+        "High salt intake": "Reduce daily salt intake and avoid processed/packaged foods.",
+        "Alcohol use": "Reduce alcohol consumption; consider speaking to a doctor about safe limits.",
+        "High cholesterol": "Adopt a fiber-rich, low-saturated-fat diet and recheck your lipid profile in 3 months.",
+    }
+    for rf in risk_factors:
+        if rf in lifestyle_map:
+            recs.append(lifestyle_map[rf])
+
+    if result.risk_level in ("High Risk", "Critical Risk"):
+        recs.insert(0, f"Book an appointment with a {disease_cfg.get('recommended_specialist', 'specialist')} "
+                       "within the next 1-2 weeks.")
+    elif result.risk_level == "Moderate Risk":
+        recs.insert(0, "Schedule the recommended tests below and follow up with your primary care doctor.")
+    else:
+        recs.insert(0, "Continue routine annual health checkups.")
+
+    if not recs:
+        recs.append("Maintain a balanced diet, regular exercise, and routine health checkups.")
+    return recs[:6]

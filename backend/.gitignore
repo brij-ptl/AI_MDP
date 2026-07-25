@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+*.db
+logs/
+app/uploads/reports/*
+app/uploads/images/*
+app/uploads/temp/*
+app/static/generated_reports/*
+!app/uploads/reports/.gitkeep
+!app/uploads/images/.gitkeep
+!app/uploads/temp/.gitkeep
+!app/static/generated_reports/.gitkeep
+.DS_Store
+*.egg-info/

@@ -1,0 +1,17 @@
+<svg width="160" height="40" viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="vitalisGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00A6D6"/>
+      <stop offset="100%" stop-color="#2F6BFF"/>
+    </linearGradient>
+  </defs>
+  <circle cx="20" cy="20" r="18" fill="url(#vitalisGrad)" opacity="0.15"/>
+  <path d="M8 20 H15 L18 12 L23 28 L27 18 L30 20 H32" stroke="url(#vitalisGrad)" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="42" y="26"
+      font-family="Sora, system-ui, sans-serif"
+      font-size="19"
+      font-weight="700"
+      fill="url(#vitalisGrad)">
+  Nidaan+
+</text>
+</svg>

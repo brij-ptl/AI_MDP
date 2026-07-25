@@ -1,0 +1,120 @@
+{
+  "slug": "alzheimers",
+  "name": "Alzheimer's Disease",
+  "category": "Neurological",
+  "icon": "brain",
+  "short_description": "Alzheimer's / cognitive decline risk from cognitive test scores and history.",
+  "overview": "Alzheimer's disease is a progressive brain disorder that slowly destroys memory and thinking skills. Standardized cognitive assessments (like MMSE) combined with age and family history provide an early risk indication.",
+  "risk_factors": [
+    "Age over 65",
+    "Family history",
+    "Cardiovascular disease",
+    "Low education level",
+    "Head injury history",
+    "Diabetes"
+  ],
+  "common_symptoms": [
+    "Memory loss disrupting daily life",
+    "Difficulty planning/solving problems",
+    "Confusion with time/place",
+    "Trouble with words in speaking/writing",
+    "Poor judgment"
+  ],
+  "recommended_tests": [
+    "MMSE (Mini-Mental State Exam)",
+    "MRI Brain",
+    "PET Scan",
+    "Cerebrospinal Fluid Analysis"
+  ],
+  "recommended_specialist": "Neurologist",
+  "algorithm": "random_forest",
+  "data_source": "synthetic_demo",
+  "dataset_url": null,
+  "target": "target",
+  "positive_value": 1,
+  "feature_schema": [
+    {
+      "name": "age",
+      "label": "Age",
+      "type": "numeric",
+      "unit": "years",
+      "min": 40,
+      "max": 100,
+      "default": 65,
+      "ocr_aliases": [
+        "age"
+      ]
+    },
+    {
+      "name": "mmse_score",
+      "label": "MMSE Score (0-30)",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 30,
+      "default": 27,
+      "ocr_aliases": [
+        "mmse score (0-30)"
+      ]
+    },
+    {
+      "name": "education_years",
+      "label": "Years of Education",
+      "type": "numeric",
+      "unit": "years",
+      "min": 0,
+      "max": 25,
+      "default": 12,
+      "ocr_aliases": [
+        "years of education"
+      ]
+    },
+    {
+      "name": "family_history",
+      "label": "Family History (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "family history (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "cardiovascular_disease",
+      "label": "Cardiovascular Disease (1=yes,0=no)",
+      "type": "categorical",
+      "categories": [
+        "1",
+        "0"
+      ],
+      "default": "0",
+      "ocr_aliases": [
+        "cardiovascular disease (1=yes,0=no)"
+      ]
+    },
+    {
+      "name": "memory_complaints_score",
+      "label": "Self-Reported Memory Complaints (0-10)",
+      "type": "numeric",
+      "unit": "",
+      "min": 0,
+      "max": 10,
+      "default": 2,
+      "ocr_aliases": [
+        "self-reported memory complaints (0-10)"
+      ]
+    }
+  ],
+  "synthetic_weights": {
+    "age": 0.04,
+    "mmse_score": -0.18,
+    "education_years": -0.04,
+    "family_history__1": 0.6,
+    "cardiovascular_disease__1": 0.5,
+    "memory_complaints_score": 0.15
+  },
+  "synthetic_base_rate": 0.1
+}
