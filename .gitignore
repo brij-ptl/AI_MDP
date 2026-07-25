@@ -24,6 +24,16 @@ backend/env/
 backend/.env
 backend/*.env
 
+# testing / linting / type-checking caches
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.ruff_cache/
+backend/.coverage
+backend/htmlcov/
+
+# packaging (if the backend is ever pip-installed as a package)
+backend/*.egg-info/
+
 # runtime-generated, not source
 backend/app/uploads/reports/*
 backend/app/uploads/images/*
