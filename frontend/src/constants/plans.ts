@@ -1,7 +1,7 @@
 export interface Plan {
-  id: string;
+  id: "starter" | "care_plus" | "family" | "annual";
   name: string;
-  price: number; // INR
+  price: number;
   period: string;
   tagline: string;
   features: string[];
@@ -17,28 +17,17 @@ export const PLANS: Plan[] = [
     period: "month",
     tagline: "For individuals trying AI screening",
     predictionsLimit: "20 predictions / month",
-    features: [
-      "20 disease predictions / month",
-      "AI Symptom Checker access",
-      "Downloadable PDF reports",
-      "Email support",
-    ],
+    features: ["20 disease predictions / month", "AI Symptom Checker access", "Downloadable PDF reports", "Email support"],
   },
   {
-    id: "care-plus",
+    id: "care_plus",
     name: "Care+",
     price: 149,
     period: "month",
     tagline: "Best for regular health monitoring",
     predictionsLimit: "Unlimited predictions",
     highlighted: true,
-    features: [
-      "Unlimited disease predictions",
-      "OCR medical report upload",
-      "Explainable AI (SHAP) insights",
-      "Priority email + chat support",
-      "Health analytics dashboard",
-    ],
+    features: ["Unlimited disease predictions", "OCR medical report upload", "Explainable AI insights", "Priority email + chat support", "Health analytics dashboard"],
   },
   {
     id: "family",
@@ -47,12 +36,7 @@ export const PLANS: Plan[] = [
     period: "3 months",
     tagline: "Whole family, one plan",
     predictionsLimit: "Unlimited · up to 4 members",
-    features: [
-      "Everything in Care+",
-      "Up to 4 family member profiles",
-      "Shared health history vault",
-      "Specialist recommendation engine",
-    ],
+    features: ["Everything in Care+", "Up to 4 family member profiles", "Shared health history vault", "Specialist recommendation engine"],
   },
   {
     id: "annual",
@@ -61,12 +45,7 @@ export const PLANS: Plan[] = [
     period: "year",
     tagline: "Maximum savings, year-round care",
     predictionsLimit: "Unlimited predictions",
-    features: [
-      "Everything in Care+",
-      "2 months free vs monthly billing",
-      "Early access to new disease modules",
-      "Dedicated support line",
-    ],
+    features: ["Everything in Care+", "2 months free vs monthly billing", "Early access to new disease modules", "Dedicated support line"],
   },
 ];
 

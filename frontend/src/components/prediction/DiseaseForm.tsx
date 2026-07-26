@@ -19,8 +19,8 @@ type PredictionResult = {
   recommended_specialist?: string;
 };
 
-export default function DiseaseForm({ disease, fields }: { disease: DiseaseMeta; fields: ClinicalField[] }) {
-  const [answers, setAnswers] = useState<Record<string, any>>({});
+export default function DiseaseForm({ disease, fields, initialValues = {} }: { disease: DiseaseMeta; fields: ClinicalField[]; initialValues?: Record<string, unknown> }) {
+  const [answers, setAnswers] = useState<Record<string, unknown>>(initialValues);
   const [result, setResult] = useState<PredictionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -30,9 +30,9 @@ export default function DiseaseForm({ disease, fields }: { disease: DiseaseMeta;
     return (
       <div className="rounded-2xl border border-amber-500/40 bg-amber-500/5 p-8 text-center">
         <Lock className="mx-auto text-amber-400" size={32} />
-        <h3 className="mt-4 font-display text-xl font-bold">Free predictions used up</h3>
+        <h3 className="mt-4 font-display text-xl font-bold">Prediction credits used up</h3>
         <p className="mt-2 text-sm text-muted">
-          You've used your 2 free predictions. Upgrade to a plan starting at ₹49/month to keep screening.
+          Your available tokens, subscription access, and free-trial credits are exhausted. Upgrade to keep screening.
         </p>
         <Button href="/pricing" className="mt-6">View Plans</Button>
       </div>
@@ -54,27 +54,12 @@ export default function DiseaseForm({ disease, fields }: { disease: DiseaseMeta;
         }
       );
 
-      const prediction = response.data.data;
-
-      // Show prediction result
-      setResult(prediction);
-
-      // Automatically generate report
-      // Count the free prediction
+      const prediction = response.data;
+      await reportService.generateReport(prediction.id);
       registerPredictionUsed();
-
-      // Generate the report in the background
-      reportService
-        .generateReport(prediction.id)
-        .catch((err) => {
-          console.error("Report generation failed:", err);
-        });
-    } catch (err: any) {
-      setError(
-        err?.response?.data?.message ??
-        err?.response?.data?.detail ??
-        "Prediction failed. Please try again."
-      );
+      setResult(prediction);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Prediction failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -125,7 +110,7 @@ export default function DiseaseForm({ disease, fields }: { disease: DiseaseMeta;
             </p>
           </div>
         )}
-        <p className="mx-auto mt-6 max-w-md text-sm text-muted">
+        <p className="mx-auto mt-6 max-w-3xl whitespace-pre-line text-left text-sm leading-6 text-muted">
           {result.doctor_explanation}
         </p>
         <div className="mt-8 flex justify-center gap-4">
@@ -138,7 +123,9 @@ export default function DiseaseForm({ disease, fields }: { disease: DiseaseMeta;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <p className="text-sm text-muted">{freeRemaining} free prediction(s) remaining on your account.</p>
+      <p className="text-sm text-muted">
+        {freeRemaining === "unlimited" ? "Unlimited predictions available on your account." : `${freeRemaining} prediction credit(s) remaining on your account.`}
+      </p>
       <div className="grid gap-4 sm:grid-cols-2">
         {fields.map((f) => (
           <ClinicalFieldInput

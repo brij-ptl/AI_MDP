@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { User, Lock, Mail, Eye, EyeOff, Sparkles, KeyRound } from "lucide-react";
-// import Button from "@/components/ui/Button";
 import { authService } from "@/services/auth.service";
+import { useAuth } from "@/context/AuthContext";
 
 // Custom Google SVG Logo
 const GoogleIcon = () => (
@@ -39,6 +39,7 @@ export default function AuthCard({ initialMode }: { initialMode: "login" | "regi
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const router = useRouter();
+  const { refreshUser } = useAuth();
 
   const goRegister = () => {
     setActive(true);
@@ -83,9 +84,9 @@ export default function AuthCard({ initialMode }: { initialMode: "login" | "regi
 
     try {
       if (mode === "login") {
-        const user: any = await authService.login(email, password);
-
-        console.log("LOGIN USER:", user);
+        const response: any = await authService.login(email, password);
+        const user = response.user;
+        await refreshUser();
 
         if (user.role === "admin") {
           router.push("/admin/dashboard");
@@ -101,16 +102,13 @@ export default function AuthCard({ initialMode }: { initialMode: "login" | "regi
 
         router.push("/login");
       }
-    } catch (error: any) {
-      setValidationError(
-        error?.response?.data?.detail ||
-        "Authentication failed. Please try again."
-      );
+    } catch (error) {
+      setValidationError(error instanceof Error ? error.message : "Authentication failed. Please try again.");
     } finally {
       setLoading(false);
     }
 
-  };   // <-- Close handleSubmit()
+  };
 
   return (
     <div className={`auth-container shadow-2xl relative border border-border/80 bg-surface/90 overflow-hidden ${active ? "active" : ""}`}>

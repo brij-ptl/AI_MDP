@@ -8,7 +8,7 @@ class Subscription(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     __tablename__ = "subscriptions"
 
     user_id = Column(String(36), ForeignKey("users.id"), nullable=False, unique=True, index=True)
-    plan = Column(String(30), default="free", nullable=False)          # free | premium_monthly | premium_yearly
+    plan = Column(String(30), default="free", nullable=False)          # free | starter | care_plus | family | annual
     status = Column(String(20), default="active", nullable=False)      # active | expired | cancelled | none
 
     predictions_used = Column(Integer, default=0, nullable=False)        # lifetime free-tier usage counter

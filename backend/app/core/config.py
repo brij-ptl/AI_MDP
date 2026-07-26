@@ -53,8 +53,13 @@ class Settings(BaseSettings):
     RAZORPAY_KEY_ID: str = "rzp_test_xxxxxxxxxxxx"
     RAZORPAY_KEY_SECRET: str = "CHANGE_ME"
     RAZORPAY_WEBHOOK_SECRET: str = "CHANGE_ME"
-    PREMIUM_MONTHLY_PRICE_INR: int = 49900     # in paise -> ₹499
-    PREMIUM_YEARLY_PRICE_INR: int = 399900     # ₹3999
+    # Amounts are in paise. Legacy PREMIUM_* settings remain for older deployments.
+    PREMIUM_MONTHLY_PRICE_INR: int = 14900
+    PREMIUM_YEARLY_PRICE_INR: int = 99900
+    STARTER_PRICE_INR: int = 4900
+    CARE_PLUS_PRICE_INR: int = 14900
+    FAMILY_PRICE_INR: int = 39900
+    ANNUAL_PRICE_INR: int = 99900
 
     # ---- Email (SMTP) ----
     SMTP_HOST: str = "smtp.gmail.com"
@@ -74,6 +79,16 @@ class Settings(BaseSettings):
     TRAINED_MODELS_DIR: str = "trained_models"
     DATASETS_DIR: str = "datasets"
     ML_CONFIG_DIR: str = "app/ml/diseases"
+
+    # ---- Clinical narrative LLM ----
+    # Keep this server-side only. Production deployments must set OPENAI_API_KEY
+    # and enable the provider; development/test environments retain a clearly
+    # labelled structured fallback so ML functionality remains available offline.
+    LLM_ENABLED: bool = False
+    OPENAI_API_KEY: str = ""
+    OPENAI_MODEL: str = "gpt-5-mini"
+    OPENAI_RESPONSES_URL: str = "https://api.openai.com/v1/responses"
+    LLM_TIMEOUT_SECONDS: int = 60
 
     # ---- Rate limiting ----
     RATE_LIMIT_PER_MINUTE: int = 60

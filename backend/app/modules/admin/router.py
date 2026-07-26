@@ -7,10 +7,40 @@ from app.database.models.user import User
 from app.schemas.user import UserProfileOut
 from app.schemas.payment import PaymentOut
 from app.schemas.feedback import FeedbackOut
+from app.schemas.admin import PredictionTokenUpdateRequest
 from app.modules.admin import controller
 from app.utils.response import success_response
 
 router = APIRouter(prefix="/admin", tags=["Admin Panel"])
+
+
+@router.get("/prediction-tokens")
+def search_prediction_token_users(query: str | None = Query(default=None), limit: int = Query(default=50, le=200),
+                                  db: Session = Depends(get_db), admin: User = Depends(get_current_admin)):
+    return success_response(controller.handle_search_token_users(db, query, limit), "Token users fetched.")
+
+
+@router.post("/prediction-tokens/{user_id}")
+def update_prediction_tokens(user_id: str, payload: PredictionTokenUpdateRequest,
+                             db: Session = Depends(get_db), admin: User = Depends(get_current_admin)):
+    data = controller.handle_update_prediction_tokens(
+        db, admin.id, user_id, payload.operation, payload.amount, payload.reason
+    )
+    return success_response(data, "Prediction tokens updated.")
+
+
+@router.get("/prediction-tokens/{user_id}/history")
+def prediction_token_history(user_id: str, db: Session = Depends(get_db), admin: User = Depends(get_current_admin)):
+    logs = controller.handle_token_history(db, user_id)
+    data = [{
+        "id": log.id, "admin_id": log.admin_id, "target_user_id": log.target_id,
+        "operation": log.metadata_json.get("operation") if log.metadata_json else None,
+        "old_value": log.metadata_json.get("old_value") if log.metadata_json else None,
+        "new_value": log.metadata_json.get("new_value") if log.metadata_json else None,
+        "reason": log.metadata_json.get("reason") if log.metadata_json else None,
+        "created_at": log.created_at.isoformat(),
+    } for log in logs]
+    return success_response(data, "Prediction token history fetched.")
 
 
 @router.get("/users")

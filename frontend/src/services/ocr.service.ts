@@ -1,10 +1,14 @@
-import { api } from "./api";
+import { getApiUrl } from "./api";
 
 export const ocrService = {
-  extract: (formData: FormData) =>
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ocr/extract`, {
-      method: "POST",
-      credentials: "include",
-      body: formData,
-    }).then((r) => r.json()),
+  upload: async (file: File, disease?: string) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    if (disease) formData.append("disease", disease);
+
+    const response = await fetch(getApiUrl("/ocr/upload"), { method: "POST", credentials: "include", body: formData });
+    const body = await response.json();
+    if (!response.ok) throw new Error(body?.detail ?? body?.message ?? "OCR upload failed.");
+    return body as { success: boolean; data: { disease_slug: string | null; extracted_parameters: Record<string, unknown> } };
+  },
 };

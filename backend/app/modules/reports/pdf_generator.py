@@ -5,7 +5,9 @@ explanation, recommended tests/specialist, and a medical disclaimer — matching
 proposal's "AI Generated Report" spec.
 """
 from __future__ import annotations
+from html import escape
 import io
+import re
 
 import matplotlib
 matplotlib.use("Agg")
@@ -17,6 +19,7 @@ from reportlab.lib.units import mm
 
 from app.services.pdf_service import new_document, get_styles, divider, risk_badge_table, footer_text
 from app.ml.registry.model_loader import load_disease_config
+from app.services.medical_report_service import SECTION_HEADINGS
 
 
 def _render_feature_importance_chart(feature_importance: list[dict]) -> io.BytesIO:
@@ -41,6 +44,22 @@ def _render_feature_importance_chart(feature_importance: list[dict]) -> io.Bytes
     plt.close(fig)
     buf.seek(0)
     return buf
+
+
+def _clinical_report_sections(report: str) -> list[tuple[str, str]]:
+    """Split the stored LLM report into PDF headings without changing its API field."""
+    sections: list[tuple[str, str]] = []
+    matches = []
+    for heading in SECTION_HEADINGS:
+        match = re.search(rf"(?im)^\s*{re.escape(heading)}\s*:?[ \t]*$", report)
+        if match:
+            matches.append((match.start(), match.end(), heading))
+    for index, (_, end, heading) in enumerate(matches):
+        next_start = matches[index + 1][0] if index + 1 < len(matches) else len(report)
+        content = report[end:next_start].strip()
+        if content:
+            sections.append((heading, content))
+    return sections
 
 
 def generate_prediction_report_pdf(prediction, user_name: str) -> bytes:
@@ -75,9 +94,16 @@ def generate_prediction_report_pdf(prediction, user_name: str) -> bytes:
         story.append(RLImage(chart_buf, width=460, height=200))
         story.append(Spacer(1, 6))
 
-    story.append(Paragraph("Doctor's Explanation", styles["SectionHeading"]))
-    story.append(Paragraph(prediction.doctor_explanation or "No explanation available.", styles["Body"]))
-    story.append(Spacer(1, 8))
+    clinical_sections = _clinical_report_sections(prediction.doctor_explanation or "")
+    if clinical_sections:
+        for heading, content in clinical_sections:
+            story.append(Paragraph(heading, styles["SectionHeading"]))
+            story.append(Paragraph(escape(content).replace("\n", "<br/>"), styles["Body"]))
+            story.append(Spacer(1, 8))
+    else:
+        story.append(Paragraph("Clinical Interpretation", styles["SectionHeading"]))
+        story.append(Paragraph(escape(prediction.doctor_explanation or "No explanation available."), styles["Body"]))
+        story.append(Spacer(1, 8))
 
     if prediction.recommendations:
         story.append(Paragraph("Personalized Recommendations", styles["SectionHeading"]))
@@ -96,9 +122,10 @@ def generate_prediction_report_pdf(prediction, user_name: str) -> bytes:
         story.append(Paragraph(f"<b>Recommended Specialist:</b> {prediction.recommended_specialist}", styles["Body"]))
         story.append(Spacer(1, 10))
 
-    story.append(Paragraph("Disease Overview", styles["SectionHeading"]))
-    story.append(Paragraph(cfg.get("overview", ""), styles["Body"]))
-    story.append(Spacer(1, 14))
+    if not clinical_sections:
+        story.append(Paragraph("Disease Overview", styles["SectionHeading"]))
+        story.append(Paragraph(cfg.get("overview", ""), styles["Body"]))
+        story.append(Spacer(1, 14))
 
     story.append(divider())
     story.append(Paragraph(footer_text(), styles["Small"]))

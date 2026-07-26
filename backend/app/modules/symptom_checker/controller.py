@@ -7,7 +7,7 @@ from app.modules.subscription import service as sub_service
 
 
 def handle_check(db: Session, user: User, text: str) -> dict:
-    sub_service.enforce_symptom_check_quota(db, user.id)
+    sub_service.enforce_symptom_check_quota(db, user)
 
     analysis = symptom_service.analyze(text)
 
@@ -23,5 +23,5 @@ def handle_check(db: Session, user: User, text: str) -> dict:
             recommendations=analysis["next_steps"], model_version="symptom-kb-1.0",
         )
 
-    sub_service.consume_symptom_check_credit(db, user.id)
+    sub_service.consume_symptom_check_credit(db, user)
     return analysis

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class CreateOrderRequest(BaseModel):
-    plan: str    # premium_monthly | premium_yearly
+    plan: str    # starter | care_plus | family | annual (legacy premium IDs are also accepted)
 
 
 class CreateOrderResponse(BaseModel):

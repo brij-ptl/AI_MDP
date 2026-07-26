@@ -9,6 +9,19 @@ def handle_list_users(db: Session, limit: int, offset: int):
     return admin_service.list_users(db, limit, offset)
 
 
+def handle_search_token_users(db: Session, query: str | None, limit: int):
+    return admin_service.search_token_users(db, query, limit)
+
+
+def handle_update_prediction_tokens(db: Session, admin_id: str, user_id: str, operation: str,
+                                    amount: int | None, reason: str | None):
+    return admin_service.update_prediction_tokens(db, admin_id, user_id, operation, amount, reason)
+
+
+def handle_token_history(db: Session, user_id: str):
+    return admin_service.token_history(db, user_id)
+
+
 def handle_toggle_user(db: Session, admin_id: str, user_id: str, is_active: bool):
     return admin_service.toggle_user_active(db, admin_id, user_id, is_active)
 

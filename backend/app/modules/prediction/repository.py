@@ -11,6 +11,12 @@ def create_prediction(db: Session, **kwargs) -> Prediction:
     return pred
 
 
+def delete_prediction(db: Session, prediction: Prediction) -> None:
+    """Remove a just-created record if its final credit reservation loses a race."""
+    db.delete(prediction)
+    db.commit()
+
+
 def get_by_id(db: Session, prediction_id: str, user_id: str) -> Prediction | None:
     return db.query(Prediction).filter(Prediction.id == prediction_id, Prediction.user_id == user_id).first()
 

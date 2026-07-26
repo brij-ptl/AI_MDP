@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Logo from "@/components/common/Logo";
 import ThemeToggle from "@/components/common/ThemeToggle";
+import { LogOut } from "lucide-react";
 
 const ADMIN_LINKS = [
   ["Dashboard", "/admin/dashboard"], ["Users", "/admin/users"], ["Diseases", "/admin/diseases"],
   ["Models", "/admin/models"], ["Datasets", "/admin/datasets"], ["Payments", "/admin/payments"],
-  ["Subscriptions", "/admin/subscriptions"], ["Feedback", "/admin/feedback"],
+  ["Subscriptions", "/admin/subscriptions"], ["Prediction Tokens", "/admin/prediction-tokens"], ["Feedback", "/admin/feedback"],
   ["Analytics", "/admin/analytics"], ["Logs", "/admin/logs"],
 ];
 
@@ -29,7 +30,12 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace("/login");
+  };
 
   useEffect(() => {
     if (loading) return;
@@ -66,7 +72,7 @@ export default function AdminLayout({
       <div className="flex-1">
         <header className="flex h-20 items-center justify-between border-b border-border px-6">
           <p className="text-xs font-semibold uppercase tracking-widest text-primary">Admin Panel</p>
-          <ThemeToggle />
+          <div className="flex items-center gap-3"><ThemeToggle /><button type="button" onClick={handleLogout} className="flex items-center gap-2 rounded-xl border border-red-500/30 px-3 py-2 text-xs font-semibold text-red-500 hover:bg-red-500/10"><LogOut size={14} /> Log out</button></div>
         </header>
         <div className="p-6 lg:p-10">{children}</div>
       </div>

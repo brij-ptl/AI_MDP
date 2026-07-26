@@ -22,5 +22,13 @@ def set_auth_cookies(response: Response, access_token: str, refresh_token: str) 
 
 
 def clear_auth_cookies(response: Response) -> None:
-    response.delete_cookie(settings.COOKIE_NAME, path="/")
-    response.delete_cookie(settings.REFRESH_COOKIE_NAME, path="/")
+    cookie_options = {
+        "path": "/",
+        "secure": settings.COOKIE_SECURE,
+        "httponly": True,
+        "samesite": settings.COOKIE_SAMESITE,
+    }
+    response.delete_cookie(settings.COOKIE_NAME, **cookie_options)
+    response.delete_cookie(settings.REFRESH_COOKIE_NAME, **cookie_options)
+    response.delete_cookie(settings.TRACKING_COOKIE_NAME, path="/", secure=settings.COOKIE_SECURE,
+                           httponly=False, samesite=settings.COOKIE_SAMESITE)

@@ -1,45 +1,68 @@
 "use client";
 
-import Cookies from "js-cookie";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { subscriptionService } from "@/services/subscription.service";
 
-const FREE_LIMIT = 2;
+type Remaining = number | "unlimited";
+type PredictionAccess = {
+  can_predict: boolean;
+  access_source: "admin" | "prediction_tokens" | "subscription" | "free_trial" | "quota_exceeded";
+  predictions_remaining: Remaining;
+};
+
+type SubscriptionResponse = {
+  data: {
+    predictions_used: number;
+    prediction_access: PredictionAccess;
+  };
+};
 
 interface TrialCtx {
   predictionsUsed: number;
-  freeRemaining: number;
+  freeRemaining: Remaining;
   isLocked: boolean;
   registerPredictionUsed: () => void;
+  refreshPredictionAccess: () => Promise<void>;
 }
 
 const TrialContext = createContext<TrialCtx>({
   predictionsUsed: 0,
-  freeRemaining: FREE_LIMIT,
+  freeRemaining: 2,
   isLocked: false,
   registerPredictionUsed: () => {},
+  refreshPredictionAccess: async () => {},
 });
 
-/** Free-trial manager: 2 free predictions per account, tracked via cookie + backend counter. */
+/** The backend subscription state is the single source of truth for prediction access. */
 export function TrialProvider({ children }: { children: React.ReactNode }) {
   const [predictionsUsed, setPredictionsUsed] = useState(0);
+  const [freeRemaining, setFreeRemaining] = useState<Remaining>(2);
+  const [canPredict, setCanPredict] = useState(true);
 
-  useEffect(() => {
-    const used = Number(Cookies.get("vitalis_predictions_used") ?? 0);
-    setPredictionsUsed(used);
+  const refreshPredictionAccess = useCallback(async () => {
+    const response = await subscriptionService.me() as SubscriptionResponse;
+    const subscription = response.data;
+    setPredictionsUsed(subscription.predictions_used ?? 0);
+    setFreeRemaining(subscription.prediction_access.predictions_remaining);
+    setCanPredict(subscription.prediction_access.can_predict);
   }, []);
 
+  useEffect(() => { refreshPredictionAccess().catch(() => {}); }, [refreshPredictionAccess]);
+
   const registerPredictionUsed = () => {
-    const next = predictionsUsed + 1;
-    setPredictionsUsed(next);
-    Cookies.set("vitalis_predictions_used", String(next), { expires: 3650 });
+    // A prediction may consume a token, subscription credit, or free-trial credit.
+    // Re-read the server after success instead of maintaining a client-side quota.
+    refreshPredictionAccess().catch(() => {});
   };
 
-  const freeRemaining = Math.max(0, FREE_LIMIT - predictionsUsed);
-
   return (
-    <TrialContext.Provider
-      value={{ predictionsUsed, freeRemaining, isLocked: freeRemaining === 0, registerPredictionUsed }}
-    >
+    <TrialContext.Provider value={{
+      predictionsUsed,
+      freeRemaining,
+      isLocked: !canPredict,
+      registerPredictionUsed,
+      refreshPredictionAccess,
+    }}>
       {children}
     </TrialContext.Provider>
   );

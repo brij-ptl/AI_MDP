@@ -1,20 +1,35 @@
 "use client";
  
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { 
   User, Lock, ShieldCheck, Eye, Bell, Activity, Laptop, 
-  Trash2, Download, ToggleLeft, ToggleRight, Sparkles, Languages
+  Trash2, Download, ToggleLeft, ToggleRight, Sparkles, Languages, LogOut
 } from "lucide-react";
 import DashboardTopbar from "@/components/layout/DashboardTopbar";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import Button from "@/components/ui/Button";
+import { subscriptionService } from "@/services/subscription.service";
+import { useAuth } from "@/context/AuthContext";
 
 type SettingCategory = "account" | "security" | "clinical";
 
 export default function SettingsPage() {
+  const router = useRouter();
+  const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<SettingCategory>("account");
   const [is2FAActive, setIs2FAActive] = useState(false);
   const [isBiometricActive, setIsBiometricActive] = useState(false);
+  const [subscription, setSubscription] = useState<{ plan: string; status: string; prediction_tokens: number | "unlimited" } | null>(null);
+
+  useEffect(() => {
+    subscriptionService.me().then((response: any) => setSubscription(response.data)).catch(() => setSubscription(null));
+  }, []);
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace("/login");
+  };
 
   return (
     <>
@@ -49,6 +64,15 @@ export default function SettingsPage() {
           {activeTab === "account" && (
             <div className="space-y-6 animate-fadeIn">
               {/* General Account */}
+              <div className="rounded-2xl border border-border bg-surface p-6">
+                <p className="text-xs font-bold text-text uppercase tracking-wider">Subscription</p>
+                <p className="mt-1 text-sm text-muted">{subscription ? `${subscription.plan.replace(/_/g, " ")} — ${subscription.status}` : "Loading subscription..."}</p>
+                <div className="mt-3 grid gap-2 text-xs text-muted sm:grid-cols-2">
+                  <p>Prediction tokens: <span className="font-semibold text-text">{subscription?.prediction_tokens ?? "—"}</span></p>
+                  <p>Role: <span className="font-semibold text-text">{user?.role ?? "—"}</span></p>
+                </div>
+                <Button onClick={handleLogout} variant="outline" className="mt-5 flex items-center gap-2 border-red-500/30 text-red-500 hover:bg-red-500/10"><LogOut size={14} /> Log out</Button>
+              </div>
               <div className="rounded-2xl border border-border bg-surface p-6 space-y-4">
                 <h3 className="font-bold text-text text-sm border-b border-border/40 pb-2">General Account Details</h3>
                 <div className="grid gap-4 sm:grid-cols-2">

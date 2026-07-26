@@ -22,6 +22,7 @@ class User(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     tracking_id = Column(String(64), nullable=True, index=True)  # first anonymous cookie id, linked at signup
     last_login_at = Column(DateTime, nullable=True)
     login_count = Column(Integer, default=0, nullable=False)
+    prediction_tokens = Column(Integer, default=0, nullable=False)
 
     # relationships
     medical_profile = relationship("MedicalProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")

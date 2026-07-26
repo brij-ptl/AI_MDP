@@ -21,7 +21,7 @@ def run_prediction(db: Session, user: User, disease_slug: str, raw_features: Dic
     assert_valid_disease(disease_slug)
 
     # 1. business rule: 2 free predictions, then mandatory payment
-    sub_service.enforce_prediction_quota(db, user.id)
+    access_source = sub_service.enforce_prediction_quota(db, user)
 
     # 2. enrich with saved medical profile + run the ML pipeline
     profile = users_service.get_medical_profile(db, user.id)
@@ -40,7 +40,13 @@ def run_prediction(db: Session, user: User, disease_slug: str, raw_features: Dic
     )
 
     # 4. consume the free-tier credit (no-op limit-wise once premium)
-    sub_service.consume_prediction_credit(db, user.id)
+    try:
+        sub_service.consume_prediction_credit(db, user, access_source)
+    except Exception:
+        # A concurrent request may have spent the final credit after the initial
+        # access check. Do not leave an uncharged prediction in history.
+        pred_repo.delete_prediction(db, prediction)
+        raise
 
     # 5. notify
     from app.ml.registry.model_loader import load_disease_config

@@ -1,18 +1,30 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 import DashboardTopbar from "@/components/layout/DashboardTopbar";
 import Button from "@/components/ui/Button";
 import { PLANS } from "@/constants/plans";
 import { formatINR } from "@/lib/utils";
+import { subscriptionService } from "@/services/subscription.service";
 
 export default function SubscriptionPage() {
+  const [subscription, setSubscription] = useState<{ plan: string; status: string; predictions_remaining: number | null } | null>(null);
+
+  useEffect(() => {
+    subscriptionService.me().then((response: any) => setSubscription(response.data)).catch(() => setSubscription(null));
+  }, []);
+
   return (
     <>
       <DashboardTopbar title="Subscription Upgrade" />
       <div className="p-6 lg:p-10 space-y-6 bg-bg min-h-screen pb-24">
         <div className="rounded-2xl border border-border bg-surface p-6">
           <p className="text-xs font-bold text-text uppercase tracking-wider">Plan Status</p>
-          <p className="text-sm text-muted mt-1">You are currently utilizing the Free Tier credentials (2 screening predictions remaining).</p>
+          <p className="mt-1 text-sm text-muted">
+            {subscription
+              ? `${subscription.plan.replace(/_/g, " ")} — ${subscription.status}${subscription.predictions_remaining === null ? "" : ` (${subscription.predictions_remaining} predictions remaining)`}`
+              : "Loading your subscription status..."}
+          </p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 pt-4">
@@ -47,7 +59,7 @@ export default function SubscriptionPage() {
               </div>
 
               <Button 
-                href="/payment" 
+                href={`/payment?plan=${plan.id}`}
                 variant={plan.highlighted ? "primary" : "outline"} 
                 className="mt-8 w-full py-2.5 text-xs font-bold"
               >

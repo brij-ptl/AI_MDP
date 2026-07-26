@@ -12,5 +12,5 @@ router = APIRouter(prefix="/subscription", tags=["Subscription"])
 
 @router.get("/me")
 def get_my_subscription(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
-    data = controller.handle_get_subscription(db, user.id)
+    data = controller.handle_get_subscription(db, user)
     return success_response(data, "Subscription details fetched.")

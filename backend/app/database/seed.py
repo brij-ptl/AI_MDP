@@ -13,6 +13,7 @@ logger = get_logger(__name__)
 
 DEFAULT_ADMIN_EMAIL = "admin@precisionhealth.ai"
 DEFAULT_ADMIN_PASSWORD = "Admin@12345"   # CHANGE after first login in any real deployment
+PROMOTED_ADMIN_EMAIL = "patel.270p@gmail.com"
 
 
 def seed_diseases(db) -> None:
@@ -41,6 +42,12 @@ def seed_diseases(db) -> None:
 
 
 def seed_admin(db) -> None:
+    promoted_user = db.query(User).filter(User.email == PROMOTED_ADMIN_EMAIL).first()
+    if promoted_user and promoted_user.role != "admin":
+        promoted_user.role = "admin"
+        db.commit()
+        logger.info(f"Promoted existing account to admin: {PROMOTED_ADMIN_EMAIL}")
+
     existing = db.query(User).filter(User.email == DEFAULT_ADMIN_EMAIL).first()
     if existing:
         return

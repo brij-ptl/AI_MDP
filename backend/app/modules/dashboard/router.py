@@ -12,7 +12,7 @@ router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
 @router.get("/overview")
 def overview(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
-    data = controller.handle_overview(db, user.id)
+    data = controller.handle_overview(db, user)
     return success_response(data, "Dashboard overview fetched.")
 
 

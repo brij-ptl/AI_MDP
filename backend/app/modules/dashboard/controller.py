@@ -1,10 +1,11 @@
 from sqlalchemy.orm import Session
+from app.database.models.user import User
 from app.modules.dashboard import service as dash_service
 from app.modules.dashboard import repository as dash_repo
 
 
-def handle_overview(db: Session, user_id: str) -> dict:
-    return dash_service.get_overview(db, user_id)
+def handle_overview(db: Session, user: User) -> dict:
+    return dash_service.get_overview(db, user)
 
 
 def handle_risk_trend(db: Session, user_id: str, disease_slug: str | None):

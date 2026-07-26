@@ -13,8 +13,13 @@ from app.services.email_service import send_payment_receipt_email
 from app.database.models.user import User
 
 PLAN_AMOUNTS = {
-    "premium_monthly": settings.PREMIUM_MONTHLY_PRICE_INR,
-    "premium_yearly": settings.PREMIUM_YEARLY_PRICE_INR,
+    "starter": settings.STARTER_PRICE_INR,
+    "care_plus": settings.CARE_PLUS_PRICE_INR,
+    "family": settings.FAMILY_PRICE_INR,
+    "annual": settings.ANNUAL_PRICE_INR,
+    # Preserve compatibility for orders initiated by an earlier frontend build.
+    "premium_monthly": settings.CARE_PLUS_PRICE_INR,
+    "premium_yearly": settings.ANNUAL_PRICE_INR,
 }
 
 

@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.database.models.user import User
@@ -13,6 +14,22 @@ def list_users(db: Session, limit: int = 50, offset: int = 0):
 
 def get_user(db: Session, user_id: str) -> User | None:
     return db.query(User).filter(User.id == user_id).first()
+
+
+def search_users(db: Session, query: str | None, limit: int = 50):
+    users = db.query(User)
+    if query:
+        pattern = f"%{query.strip()}%"
+        users = users.filter(or_(User.email.ilike(pattern), User.full_name.ilike(pattern), User.id.ilike(pattern)))
+    return users.order_by(User.created_at.desc()).limit(limit).all()
+
+
+def set_prediction_tokens(db: Session, user: User, value: int) -> User:
+    user.prediction_tokens = value
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
 
 
 def set_user_active(db: Session, user: User, is_active: bool) -> User:
@@ -70,3 +87,10 @@ def log_admin_action(db: Session, admin_id: str, action: str, target_type: str |
 
 def list_logs(db: Session, limit: int = 100):
     return db.query(AdminLog).order_by(AdminLog.created_at.desc()).limit(limit).all()
+
+
+def list_token_logs(db: Session, user_id: str, limit: int = 100):
+    return (db.query(AdminLog)
+            .filter(AdminLog.target_type == "user", AdminLog.target_id == user_id,
+                    AdminLog.action.like("PREDICTION_TOKENS_%"))
+            .order_by(AdminLog.created_at.desc()).limit(limit).all())
