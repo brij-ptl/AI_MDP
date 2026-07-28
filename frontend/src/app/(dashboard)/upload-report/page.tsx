@@ -17,8 +17,16 @@ export default function UploadReportPage() {
   const [error, setError] = useState("");
   const upload = async () => {
     if (!file) return;
+    if (!disease) {
+      setError("Please select a disease module before running OCR extraction.");
+      return;
+    }
     setLoading(true); setError("");
-    try { const response = await ocrService.upload(file, disease || undefined); setValues(response.data.extracted_parameters); }
+    try { 
+      const response = await ocrService.upload(file, disease || undefined); 
+      setValues(response.data.extracted_parameters); 
+      if (response.data.disease_slug) setDisease(response.data.disease_slug);
+    }
     catch (err) { setError(err instanceof Error ? err.message : "Unable to extract this report."); }
     finally { setLoading(false); }
   };

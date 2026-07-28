@@ -10,8 +10,8 @@ import { LogOut } from "lucide-react";
 
 const ADMIN_LINKS = [
   ["Dashboard", "/admin/dashboard"], ["Users", "/admin/users"], ["Diseases", "/admin/diseases"],
-  ["Models", "/admin/models"], ["Datasets", "/admin/datasets"], ["Payments", "/admin/payments"],
-  ["Subscriptions", "/admin/subscriptions"], ["Prediction Tokens", "/admin/prediction-tokens"], ["Feedback", "/admin/feedback"],
+  ["Models", "/admin/models"], ["Payments", "/admin/payments"],
+  ["Prediction Tokens", "/admin/prediction-tokens"], ["Feedback", "/admin/feedback"],
   ["Analytics", "/admin/analytics"], ["Logs", "/admin/logs"],
 ];
 
@@ -34,7 +34,6 @@ export default function AdminLayout({
 
   const handleLogout = async () => {
     await logout();
-    router.replace("/login");
   };
 
   useEffect(() => {

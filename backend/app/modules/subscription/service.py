@@ -123,6 +123,13 @@ def consume_symptom_check_credit(db: Session, user: "User") -> Subscription:
 def activate_premium(db: Session, user_id: str, plan: str) -> Subscription:
     sub = sub_repo.get_or_create(db, user_id)
     plan = LEGACY_PLAN_ALIASES.get(plan, plan)
+    
+    if plan == "starter":
+        user = db.query(User).filter(User.id == user_id).first()
+        if user:
+            user.prediction_tokens += 20
+        return sub_repo.save(db, sub)
+
     if plan not in PLAN_DURATIONS_DAYS:
         raise ValueError("Unsupported subscription plan.")
     sub.plan = plan

@@ -22,7 +22,7 @@ class Subscription(Base, UUIDPrimaryKeyMixin, TimestampMixin):
 
     def is_premium_active(self) -> bool:
         from datetime import datetime
-        if self.plan == "free":
+        if self.plan in ("free", "starter"):
             return False
         if self.status != "active":
             return False

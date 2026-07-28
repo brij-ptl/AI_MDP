@@ -8,6 +8,7 @@ type User = {
   id: string;
   full_name: string;
   email: string;
+  phone?: string;
   role: "admin" | "user";
 };
 
@@ -55,6 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       window.sessionStorage.clear();
       setUser(null);
       setLoading(false);
+      window.location.href = "/login";
     }
   }, []);
 

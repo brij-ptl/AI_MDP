@@ -1,11 +1,11 @@
 from datetime import datetime
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 class UserProfileOut(BaseModel):
     id: str
     full_name: str
-    email: EmailStr
+    email: str
     phone: str | None = None
     role: str
     is_email_verified: bool

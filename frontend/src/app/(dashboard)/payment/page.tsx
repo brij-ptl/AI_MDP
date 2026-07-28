@@ -12,6 +12,8 @@ import { formatINR } from "@/lib/utils";
 import {
   paymentService, type Payment, type PaymentOrder, type SubscriptionPlan,
 } from "@/services/payment.service";
+import { useAuth } from "@/context/AuthContext";
+import { useTrial } from "@/context/TrialContext";
 
 declare global {
   interface Window {
@@ -41,6 +43,8 @@ function loadRazorpay(): Promise<boolean> {
 export default function PaymentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { refreshUser } = useAuth();
+  const { refreshPredictionAccess } = useTrial();
   const requestedPlan = searchParams.get("plan");
   const [plan, setPlan] = useState<SubscriptionPlan>(
     requestedPlan && availablePlans.has(requestedPlan as SubscriptionPlan)
@@ -71,6 +75,8 @@ export default function PaymentPage() {
   }) => {
     try {
       await paymentService.verify(payment);
+      await refreshUser();
+      await refreshPredictionAccess();
       setComplete(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Payment verification failed.");

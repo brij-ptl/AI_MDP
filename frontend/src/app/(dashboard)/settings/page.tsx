@@ -28,7 +28,6 @@ export default function SettingsPage() {
 
   const handleLogout = async () => {
     await logout();
-    router.replace("/login");
   };
 
   return (
@@ -77,12 +76,16 @@ export default function SettingsPage() {
                 <h3 className="font-bold text-text text-sm border-b border-border/40 pb-2">General Account Details</h3>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Username</label>
-                    <input type="text" defaultValue="adityavarma" className="w-full rounded-xl border border-border bg-bg/50 px-4 py-2.5 text-xs text-text outline-none focus:border-primary" />
+                    <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Full Name</label>
+                    <input type="text" value={user?.full_name || ""} disabled className="w-full rounded-xl border border-border bg-bg/20 px-4 py-2.5 text-xs text-muted outline-none cursor-not-allowed" />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Verification Number</label>
-                    <input type="text" defaultValue="+91 XXXXX XX210" disabled className="w-full rounded-xl border border-border bg-bg/20 px-4 py-2.5 text-xs text-muted outline-none cursor-not-allowed" />
+                    <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Email Address</label>
+                    <input type="text" value={user?.email || ""} disabled className="w-full rounded-xl border border-border bg-bg/20 px-4 py-2.5 text-xs text-muted outline-none cursor-not-allowed" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Verification Number (Phone)</label>
+                    <input type="text" value={user?.phone || "Not provided"} disabled className="w-full rounded-xl border border-border bg-bg/20 px-4 py-2.5 text-xs text-muted outline-none cursor-not-allowed" />
                   </div>
                 </div>
               </div>

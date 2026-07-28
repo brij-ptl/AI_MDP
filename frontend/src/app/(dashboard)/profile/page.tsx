@@ -9,183 +9,79 @@ import {
 } from "lucide-react";
 import DashboardTopbar from "@/components/layout/DashboardTopbar";
 import Button from "@/components/ui/Button";
+import { useAuth } from "@/context/AuthContext";
+import { userService } from "@/services/user.service";
+import { dashboardService } from "@/services/dashboard.service";
 
-// Custom Calendar Date Picker Component
-function CustomDatePicker({ value, onChange }: { value: string; onChange: (val: string) => void }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [currentDate, setCurrentDate] = useState(value ? new Date(value) : new Date(1995, 0, 1));
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  // Generate range of years
-  const years: number[] = [];
-  const currentYear = new Date().getFullYear();
-  for (let y = currentYear; y >= 1920; y--) {
-    years.push(y);
-  }
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handlePrevMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
-  };
-
-  const handleNextMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
-  };
-
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentDate(new Date(currentDate.getFullYear(), parseInt(e.target.value), 1));
-  };
-
-  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentDate(new Date(parseInt(e.target.value), currentDate.getMonth(), 1));
-  };
-
-  // Get list of days in current month
-  const getDaysInMonth = () => {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    const date = new Date(year, month, 1);
-    const days = [];
-    
-    // Fill empty slots before start of month
-    const startDay = date.getDay();
-    for (let i = 0; i < startDay; i++) {
-      days.push(null);
-    }
-    
-    while (date.getMonth() === month) {
-      days.push(new Date(date));
-      date.setDate(date.getDate() + 1);
-    }
-    return days;
-  };
-
-  const selectDay = (day: Date) => {
-    const yyyy = day.getFullYear();
-    const mm = String(day.getMonth() + 1).padStart(2, "0");
-    const dd = String(day.getDate()).padStart(2, "0");
-    onChange(`${yyyy}-${mm}-${dd}`);
-    setIsOpen(false);
-  };
-
-  const days = getDaysInMonth();
-  const weekdays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-
-  return (
-    <div className="relative w-full" ref={containerRef}>
-      <label className="text-[10px] uppercase font-bold text-muted tracking-wider block mb-1">Date of Birth</label>
-      <div 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between rounded-xl border border-border bg-bg/50 px-4 py-3 cursor-pointer hover:border-primary/60 transition-colors"
-      >
-        <span className="text-sm text-text">{value ? new Date(value).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' }) : "Select birthdate"}</span>
-        <Calendar size={16} className="text-muted" />
-      </div>
-
-      {isOpen && (
-        <div className="absolute z-50 mt-2 w-72 rounded-2xl border border-border bg-surface p-4 shadow-xl transition-all animate-fadeIn">
-          {/* Calendar Header Controls */}
-          <div className="flex items-center justify-between gap-1 mb-4 pb-2 border-b border-border/40">
-            <button type="button" onClick={handlePrevMonth} className="p-1 rounded-lg hover:bg-bg text-muted hover:text-primary transition-colors"><ChevronLeft size={16} /></button>
-            <div className="flex gap-1.5">
-              <select 
-                value={currentDate.getMonth()} 
-                onChange={handleMonthChange}
-                className="bg-bg text-text text-xs rounded-lg border border-border p-1 outline-none font-semibold cursor-pointer"
-              >
-                {months.map((m, i) => (
-                  <option key={i} value={i}>{m}</option>
-                ))}
-              </select>
-              <select 
-                value={currentDate.getFullYear()} 
-                onChange={handleYearChange}
-                className="bg-bg text-text text-xs rounded-lg border border-border p-1 outline-none font-semibold cursor-pointer"
-              >
-                {years.map((y) => (
-                  <option key={y} value={y}>{y}</option>
-                ))}
-              </select>
-            </div>
-            <button type="button" onClick={handleNextMonth} className="p-1 rounded-lg hover:bg-bg text-muted hover:text-primary transition-colors"><ChevronRight size={16} /></button>
-          </div>
-
-          {/* Days Grid */}
-          <div className="grid grid-cols-7 gap-1 text-center mb-1">
-            {weekdays.map((w) => (
-              <span key={w} className="text-[10px] font-bold text-muted uppercase">{w}</span>
-            ))}
-          </div>
-          <div className="grid grid-cols-7 gap-1">
-            {days.map((day, i) => {
-              if (day === null) return <span key={`empty-${i}`} />;
-              const isSelected = value === `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`;
-              const isToday = new Date().toDateString() === day.toDateString();
-              return (
-                <button
-                  key={day.getTime()}
-                  type="button"
-                  onClick={() => selectDay(day)}
-                  className={`h-8 w-8 text-xs font-semibold rounded-lg flex items-center justify-center transition-all ${
-                    isSelected ? "bg-primary text-bg font-extrabold shadow-sm scale-110" : 
-                    isToday ? "border border-primary text-primary" : 
-                    "text-text hover:bg-bg/60"
-                  }`}
-                >
-                  {day.getDate()}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+// Custom Calendar Date Picker Component removed since backend uses Age.
 
 export default function ProfilePage() {
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const { user, refreshUser } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [overview, setOverview] = useState<any>(null);
+  
   const [profileData, setProfileData] = useState({
-    fullName: "Aditya Varma",
-    email: "aditya.varma@nidaanplus.in",
-    phone: "+91 98765 43210",
-    dob: "1995-04-12",
-    bloodGroup: "O+",
-    height: "178",
-    weight: "74",
-    emergencyContact: "Ramesh Varma (Father) - +91 99887 76655",
-    allergies: "Peanuts, Penicillin",
-    chronicConditions: "Mild Asthma",
-    activityLevel: "Moderately Active",
-    smoking: "Non-smoker",
-    alcohol: "Occasional",
-    insurance: "Star Health Assurance - #SH10034928"
+    fullName: "",
+    email: "",
+    phone: "",
+    age: "",
+    gender: "",
+    bloodGroup: "",
+    height: "",
+    weight: "",
+    familyHistory: "",
+    existingConditions: "",
+    activityLevel: "",
+    smoking: "",
+    alcohol: "",
   });
   
   const [completion, setCompletion] = useState(0);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    setIsSubscribed(Cookies.get("vitalis_subscribed") === "true");
-  }, []);
+    async function loadData() {
+      try {
+        const responses = await Promise.all([
+          dashboardService.overview(),
+          userService.getMedicalProfile()
+        ]);
+        const dashRes: any = responses[0];
+        const medRes: any = responses[1];
+        setOverview(dashRes.data);
+        
+        const med = medRes.data;
+        setProfileData({
+          fullName: user?.full_name || "",
+          email: user?.email || "",
+          phone: user?.phone || "",
+          age: med?.age ? String(med.age) : "",
+          gender: med?.gender || "",
+          bloodGroup: med?.blood_group || "",
+          height: med?.height_cm ? String(med.height_cm) : "",
+          weight: med?.weight_kg ? String(med.weight_kg) : "",
+          familyHistory: med?.family_history || "",
+          existingConditions: med?.existing_conditions || "",
+          activityLevel: med?.physical_activity || "",
+          smoking: med?.smoking || "",
+          alcohol: med?.alcohol || "",
+        });
+      } catch (err) {
+        setMessage("Failed to load profile data. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    if (user) {
+      loadData();
+    }
+  }, [user]);
 
   // Compute profile completion percentage dynamically
   useEffect(() => {
     const totalFields = Object.keys(profileData).length;
-    const filledFields = Object.values(profileData).filter(val => val.trim() !== "").length;
+    const filledFields = Object.values(profileData).filter(val => String(val).trim() !== "").length;
     setCompletion(Math.round((filledFields / totalFields) * 100));
   }, [profileData]);
 
@@ -193,10 +89,43 @@ export default function ProfilePage() {
     setProfileData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Clinical Profile Successfully Synchronized.");
+    setSaving(true);
+    setMessage("");
+    try {
+      // 1. Update basic info
+      if (profileData.fullName !== user?.full_name || profileData.phone !== user?.phone) {
+        await userService.updateMe({ full_name: profileData.fullName, phone: profileData.phone });
+        await refreshUser();
+      }
+      
+      // 2. Update medical profile
+      await userService.saveMedicalProfile({
+        age: profileData.age ? parseInt(profileData.age) : null,
+        gender: profileData.gender || null,
+        height_cm: profileData.height ? parseFloat(profileData.height) : null,
+        weight_kg: profileData.weight ? parseFloat(profileData.weight) : null,
+        blood_group: profileData.bloodGroup || null,
+        smoking: profileData.smoking || null,
+        alcohol: profileData.alcohol || null,
+        physical_activity: profileData.activityLevel || null,
+        family_history: profileData.familyHistory || null,
+        existing_conditions: profileData.existingConditions || null,
+      });
+
+      setMessage("Clinical Profile Successfully Synchronized.");
+    } catch (err: any) {
+      setMessage(err.message || "Failed to save profile.");
+    } finally {
+      setSaving(false);
+      setTimeout(() => setMessage(""), 5000);
+    }
   };
+
+  if (loading) {
+    return <><DashboardTopbar title="Clinical Profile" /><div className="p-10 text-center text-muted">Loading profile...</div></>;
+  }
 
   return (
     <>
@@ -206,8 +135,10 @@ export default function ProfilePage() {
         <div className="rounded-2xl border border-border bg-surface p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-secondary border border-border" />
-              {isSubscribed && (
+              <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-secondary border border-border flex items-center justify-center text-xl font-bold text-bg">
+                {user?.full_name?.charAt(0)?.toUpperCase()}
+              </div>
+              {overview?.is_premium_active && (
                 <span className="absolute -bottom-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-[#FBBF24] border-2 border-bg text-bg text-[10px] font-bold shadow-md animate-pulse">
                   ★
                 </span>
@@ -215,14 +146,22 @@ export default function ProfilePage() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="font-display text-xl font-extrabold text-text">{profileData.fullName}</h2>
-                {isSubscribed && (
+                <h2 className="font-display text-xl font-extrabold text-text">{user?.full_name}</h2>
+                <span className="flex items-center gap-1 rounded-full bg-surface2 border border-border px-2 py-0.5 text-[9px] font-bold text-muted capitalize">
+                  {user?.role} Role
+                </span>
+                {overview?.is_premium_active && (
                   <span className="flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 px-2 py-0.5 text-[9px] font-bold text-primary">
                     Care+ Subscriber
                   </span>
                 )}
               </div>
-              <p className="text-xs text-muted mt-1">{profileData.email}</p>
+              <p className="text-xs text-muted mt-1">{user?.email}</p>
+              {overview && (
+                <p className="text-xs text-primary font-medium mt-1">
+                  Tokens: {overview.prediction_tokens} | Plan: {overview.subscription_plan}
+                </p>
+              )}
             </div>
           </div>
           <div className="w-full sm:w-auto text-right">
@@ -263,8 +202,8 @@ export default function ProfilePage() {
                   <input 
                     type="email" 
                     value={profileData.email}
-                    onChange={(e) => handleChange("email", e.target.value)}
-                    className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-sm text-text outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200" 
+                    disabled
+                    className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-sm text-muted opacity-60 outline-none cursor-not-allowed" 
                   />
                 </div>
                 <div className="space-y-1">
@@ -277,24 +216,41 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <CustomDatePicker 
-                    value={profileData.dob} 
-                    onChange={(val) => handleChange("dob", val)} 
+                  <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Age</label>
+                  <input 
+                    type="number" 
+                    value={profileData.age}
+                    onChange={(e) => handleChange("age", e.target.value)}
+                    className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-sm text-text outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200" 
                   />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Gender</label>
+                  <select 
+                    value={profileData.gender}
+                    onChange={(e) => handleChange("gender", e.target.value)}
+                    className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-sm text-text outline-none focus:border-primary cursor-pointer" 
+                  >
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
                 </div>
               </div>
             </div>
 
             <div className="rounded-2xl border border-border bg-surface p-6 space-y-6">
               <h3 className="font-bold text-text text-sm pb-2 border-b border-border/40">2. Physical & Clinical Metrics</h3>
-              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+              <div className="grid gap-6 sm:grid-cols-3">
                 <div className="space-y-1">
                   <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Blood Group</label>
                   <select 
                     value={profileData.bloodGroup}
                     onChange={(e) => handleChange("bloodGroup", e.target.value)}
-                    className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-sm text-text outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 cursor-pointer" 
+                    className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-sm text-text outline-none focus:border-primary cursor-pointer" 
                   >
+                    <option value="">Select</option>
                     {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((b) => (
                       <option key={b} value={b} className="bg-surface text-text">{b}</option>
                     ))}
@@ -319,47 +275,28 @@ export default function ProfilePage() {
                   />
                 </div>
               </div>
-              
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Emergency Contact</label>
-                  <input 
-                    type="text" 
-                    value={profileData.emergencyContact}
-                    onChange={(e) => handleChange("emergencyContact", e.target.value)}
-                    className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-sm text-text outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200" 
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Insurance Identification</label>
-                  <input 
-                    type="text" 
-                    value={profileData.insurance}
-                    onChange={(e) => handleChange("insurance", e.target.value)}
-                    className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-sm text-text outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200" 
-                  />
-                </div>
-              </div>
             </div>
 
             <div className="rounded-2xl border border-border bg-surface p-6 space-y-6">
               <h3 className="font-bold text-text text-sm pb-2 border-b border-border/40">3. Anamnesis / Medical History</h3>
               <div className="grid gap-6 sm:grid-cols-2">
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Known Allergies</label>
+                  <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Family History</label>
                   <input 
                     type="text" 
-                    value={profileData.allergies}
-                    onChange={(e) => handleChange("allergies", e.target.value)}
+                    value={profileData.familyHistory}
+                    placeholder="e.g. Diabetes, Hypertension"
+                    onChange={(e) => handleChange("familyHistory", e.target.value)}
                     className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-sm text-text outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200" 
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Chronic Conditions</label>
+                  <label className="text-[10px] uppercase font-bold text-muted tracking-wider">Existing Conditions</label>
                   <input 
                     type="text" 
-                    value={profileData.chronicConditions}
-                    onChange={(e) => handleChange("chronicConditions", e.target.value)}
+                    value={profileData.existingConditions}
+                    placeholder="e.g. Asthma"
+                    onChange={(e) => handleChange("existingConditions", e.target.value)}
                     className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-sm text-text outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200" 
                   />
                 </div>
@@ -380,8 +317,9 @@ export default function ProfilePage() {
                     onChange={(e) => handleChange("activityLevel", e.target.value)}
                     className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-xs text-text outline-none focus:border-primary cursor-pointer" 
                   >
-                    {["Sedentary", "Lightly Active", "Moderately Active", "Very Active"].map((a) => (
-                      <option key={a} value={a} className="bg-surface text-text">{a}</option>
+                    <option value="">Select</option>
+                    {["sedentary", "moderate", "active"].map((a) => (
+                      <option key={a} value={a} className="bg-surface text-text capitalize">{a}</option>
                     ))}
                   </select>
                 </div>
@@ -393,8 +331,9 @@ export default function ProfilePage() {
                     onChange={(e) => handleChange("smoking", e.target.value)}
                     className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-xs text-text outline-none focus:border-primary cursor-pointer" 
                   >
-                    {["Non-smoker", "Occasional", "Regular Smoker"].map((s) => (
-                      <option key={s} value={s} className="bg-surface text-text">{s}</option>
+                    <option value="">Select</option>
+                    {["never", "former", "current"].map((s) => (
+                      <option key={s} value={s} className="bg-surface text-text capitalize">{s}</option>
                     ))}
                   </select>
                 </div>
@@ -406,38 +345,9 @@ export default function ProfilePage() {
                     onChange={(e) => handleChange("alcohol", e.target.value)}
                     className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-xs text-text outline-none focus:border-primary cursor-pointer" 
                   >
-                    {["None", "Occasional", "Regular"].map((a) => (
-                      <option key={a} value={a} className="bg-surface text-text">{a}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-surface p-6 space-y-6">
-              <h3 className="font-bold text-text text-sm pb-2 border-b border-border/40">5. Preferences</h3>
-              
-              <div className="space-y-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase font-bold text-muted tracking-wider block">Preferred Language</label>
-                  <select 
-                    defaultValue="English" 
-                    className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-xs text-text outline-none focus:border-primary cursor-pointer"
-                  >
-                    {["English", "Hindi", "Spanish", "French", "German"].map((l) => (
-                      <option key={l} value={l} className="bg-surface text-text">{l}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase font-bold text-muted tracking-wider block">Timezone</label>
-                  <select 
-                    defaultValue="GMT+5:30" 
-                    className="w-full rounded-xl border border-border bg-bg/50 px-4 py-3 text-xs text-text outline-none focus:border-primary cursor-pointer"
-                  >
-                    {["GMT+5:30 (IST)", "GMT-5:00 (EST)", "GMT+0:00 (UTC)", "GMT+8:00 (SGT)"].map((t) => (
-                      <option key={t} value={t} className="bg-surface text-text">{t}</option>
+                    <option value="">Select</option>
+                    {["never", "occasional", "regular"].map((a) => (
+                      <option key={a} value={a} className="bg-surface text-text capitalize">{a}</option>
                     ))}
                   </select>
                 </div>
@@ -445,8 +355,13 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-4">
-              <Button type="submit" className="w-full py-4 text-xs font-bold shadow-glow hover:-translate-y-0.5">
-                Save & Synchronize Changes
+              {message && (
+                <div className="rounded-xl border border-primary/20 bg-primary/10 p-3 text-center text-xs font-semibold text-primary">
+                  {message}
+                </div>
+              )}
+              <Button type="submit" disabled={saving} className="w-full py-4 text-xs font-bold shadow-glow hover:-translate-y-0.5">
+                {saving ? "Saving..." : "Save & Synchronize Changes"}
               </Button>
               <div className="flex items-center gap-2 text-[10px] text-muted justify-center">
                 <ShieldCheck size={12} className="text-primary" />

@@ -13,54 +13,139 @@ Extraction strategy (no paid OCR API required):
 """
 from __future__ import annotations
 import io
+import os
 import re
+import shutil
 from typing import Any
 
+from PIL import Image, ImageFilter, ImageOps
 from app.core.exceptions import ValidationException
 from app.ml.registry.model_loader import load_disease_config
 
 
+_TESSERACT_VERIFIED = False
+
+def verify_and_configure_tesseract():
+    global _TESSERACT_VERIFIED
+    if _TESSERACT_VERIFIED:
+        return
+        
+    import pytesseract
+    tess_path = shutil.which("tesseract")
+    
+    if not tess_path and os.name == 'nt':
+        common_paths = [
+            r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+            r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+            os.path.expandvars(r"%LOCALAPPDATA%\Tesseract-OCR\tesseract.exe"),
+            r"c:\Users\hp\OneDrive\1 iwill\AI_MDP\backend\tess_extracted\tesseract.exe"
+        ]
+        for p in common_paths:
+            if os.path.exists(p):
+                tess_path = p
+                break
+                
+    if not tess_path:
+        raise ValidationException(
+            "Tesseract-OCR is not installed. Windows users: download the installer from "
+            "UB Mannheim (https://github.com/UB-Mannheim/tesseract/wiki). "
+            "Linux users: run 'sudo apt-get install tesseract-ocr'."
+        )
+        
+    pytesseract.pytesseract.tesseract_cmd = tess_path
+    _TESSERACT_VERIFIED = True
+
+def enhance_image_for_ocr(image: Image.Image) -> Image.Image:
+    # 1. Grayscale
+    img = image.convert('L')
+    
+    # 2. Resize (upscale 2x for better DPI OCR accuracy)
+    img = img.resize((img.width * 2, img.height * 2), Image.Resampling.LANCZOS)
+    
+    # 3. Noise reduction (median filter)
+    img = img.filter(ImageFilter.MedianFilter(size=3))
+    
+    # 4. Thresholding (basic binarization)
+    img = img.point(lambda p: 0 if p < 140 else 255)
+    
+    # 5. Deskew / rotation via OSD
+    try:
+        import pytesseract
+        osd = pytesseract.image_to_osd(img)
+        match = re.search(r'(?<=Rotate: )\d+', osd)
+        if match:
+            angle = int(match.group(0))
+            if angle != 0:
+                img = img.rotate(-angle, expand=True, resample=Image.Resampling.BICUBIC)
+    except Exception:
+        # Ignore OSD errors if it can't detect orientation
+        pass
+        
+    return img
+
 def extract_text_from_pdf(file_bytes: bytes) -> str:
     import pdfplumber
     text_chunks = []
-    with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
-        for page in pdf.pages:
-            page_text = page.extract_text() or ""
-            text_chunks.append(page_text)
-    text = "\n".join(text_chunks).strip()
-    if text:
-        return text
+    try:
+        with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
+            for page in pdf.pages:
+                page_text = page.extract_text() or ""
+                text_chunks.append(page_text)
+        text = "\n".join(text_chunks).strip()
+        if text:
+            return text
+    except Exception as e:
+        raise ValidationException(f"Unsupported file or corrupted PDF: {e}")
 
     # Scanned (image-only) PDF: fall back to OCR page-by-page.
+    verify_and_configure_tesseract()
     try:
         from pdf2image import convert_from_bytes
         import pytesseract
+        # Poppler is still required for pdf2image to convert scanned PDFs to images
         images = convert_from_bytes(file_bytes)
-        return "\n".join(pytesseract.image_to_string(img) for img in images)
+        
+        extracted = []
+        for img in images:
+            enhanced = enhance_image_for_ocr(img)
+            extracted.append(pytesseract.image_to_string(enhanced))
+            
+        full_text = "\n".join(extracted).strip()
+        if not full_text:
+            raise ValidationException("OCR extracted no readable text. Image quality may be too poor.")
+        return full_text
+    except ValidationException:
+        raise
     except Exception as e:
         raise ValidationException(
-            "Could not extract text from this PDF. It may be a scanned document requiring "
-            f"the poppler + tesseract system packages, which failed to run: {e}"
+            "Could not extract text from this scanned PDF. Ensure poppler is installed "
+            f"and image quality is sufficient: {e}"
         )
 
 
 def extract_text_from_image(file_bytes: bytes) -> str:
+    verify_and_configure_tesseract()
     try:
         import pytesseract
-        from PIL import Image
         image = Image.open(io.BytesIO(file_bytes))
-        return pytesseract.image_to_string(image)
+        enhanced = enhance_image_for_ocr(image)
+        text = pytesseract.image_to_string(enhanced).strip()
+        
+        if not text:
+            raise ValidationException("OCR extracted no readable text. Image quality may be too poor.")
+        return text
+    except ValidationException:
+        raise
     except Exception as e:
-        raise ValidationException(
-            f"Could not run OCR on this image. Ensure the tesseract-ocr system package is "
-            f"installed on the server: {e}"
-        )
+        raise ValidationException(f"Unsupported file format or unreadable image: {e}")
 
 
 def extract_raw_text(file_bytes: bytes, ext: str) -> str:
-    if ext == ".pdf":
+    if ext.lower() == ".pdf":
         return extract_text_from_pdf(file_bytes)
-    return extract_text_from_image(file_bytes)
+    elif ext.lower() in [".png", ".jpg", ".jpeg"]:
+        return extract_text_from_image(file_bytes)
+    raise ValidationException("Unsupported file type. Please upload a PDF, PNG, JPG, or JPEG.")
 
 
 _NUMBER_RE = r"[:\-\s]{1,3}(\d+\.?\d*)"

@@ -47,10 +47,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# ---- middleware (order matters: outermost added last is executed first) ----
-add_cors_middleware(app)
-app.add_middleware(RateLimitMiddleware)
+# ---- middleware (order matters: last added = outermost = runs first) ----
+# CORS must be outermost so it intercepts OPTIONS preflight before the router.
 app.add_middleware(RequestLoggerMiddleware)
+app.add_middleware(RateLimitMiddleware)
+add_cors_middleware(app)  # added last → runs first
 
 register_exception_handlers(app)
 

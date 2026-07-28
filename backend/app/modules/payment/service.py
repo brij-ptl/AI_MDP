@@ -46,6 +46,9 @@ def verify_and_activate(db: Session, user: User, order_id: str, payment_id: str,
     if not payment or payment.user_id != user.id:
         raise ValidationException("Order not found for this user.")
 
+    if payment.status == "success":
+        return {"status": "success", "plan": payment.plan}
+
     is_valid = rp.verify_payment_signature(order_id, payment_id, signature)
     if not is_valid:
         payment.status = "failed"

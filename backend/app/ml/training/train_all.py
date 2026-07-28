@@ -211,4 +211,4 @@ if __name__ == "__main__":
     parser.add_argument("--disease", type=str, default=None, help="Train a single disease slug only")
     args = parser.parse_args()
     results = train_all(only=args.disease)
-    print(json.dumps(results, indent=2))
+    logger.info("Training results:\n" + json.dumps(results, indent=2))
