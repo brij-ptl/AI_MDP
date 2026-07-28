@@ -12,7 +12,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image as RLImage, HRFlowable,
+    SimpleDocTemplate, Paragraph, Table, TableStyle, HRFlowable,
 )
 
 BRAND_COLOR = colors.HexColor("#0F766E")     # teal - matches a typical healthcare palette

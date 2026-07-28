@@ -2,9 +2,11 @@
 Central application configuration.
 All values are overridable via environment variables / .env file.
 """
+import sys
 from functools import lru_cache
 from typing import List
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import model_validator, ValidationError
 
 
 class Settings(BaseSettings):
@@ -39,11 +41,11 @@ class Settings(BaseSettings):
 
     # ---- CORS ----
     CORS_ORIGINS: List[str] = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:7000",
-    "http://127.0.0.1:7000",
-]
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:7000",
+        "http://127.0.0.1:7000",
+    ]
 
     # ---- Business rules ----
     FREE_PREDICTIONS_LIMIT: int = 2
@@ -96,10 +98,42 @@ class Settings(BaseSettings):
     # ---- OCR ----
     TESSERACT_CMD: str = "tesseract"   # override if tesseract binary is elsewhere
 
+    @model_validator(mode="after")
+    def validate_production_environment(self):
+        if self.APP_ENV == "production":
+            errors = []
+            if self.JWT_SECRET_KEY == "CHANGE_THIS_SECRET_IN_PRODUCTION_ENV_FILE" or len(self.JWT_SECRET_KEY) < 32:
+                errors.append("JWT_SECRET_KEY must be a strong random string (>= 32 chars).")
+            if self.DEBUG is not False:
+                errors.append("DEBUG must be False.")
+            if self.COOKIE_SECURE is not True:
+                errors.append("COOKIE_SECURE must be True.")
+            if "sqlite" in self.DATABASE_URL.lower():
+                errors.append("DATABASE_URL must not use SQLite in production.")
+            
+            if errors:
+                raise ValueError("Production configuration errors:\n" + "\n".join(f"  - {e}" for e in errors))
+        return self
+
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    try:
+        return Settings()
+    except ValidationError as e:
+        print("\n" + "=" * 60)
+        print("🚨 ENVIRONMENT VALIDATION FAILED")
+        print("=" * 60)
+        print("The following environment variables are missing or invalid:\n")
+        
+        for err in e.errors():
+            loc = " -> ".join(str(l) for l in err["loc"])
+            msg = err["msg"]
+            print(f"❌ {loc}: {msg}")
+            
+        print("\n" + "=" * 60)
+        print("Please fix your .env file or environment variables before starting.")
+        sys.exit(1)
 
 
 settings = get_settings()

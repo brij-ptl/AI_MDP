@@ -12,7 +12,7 @@ from starlette.requests import Request
 from app.core.config import settings
 from app.core.logging import get_logger
 
-logger = get_logger("request_audit")
+logger = get_logger("access")
 
 
 class RequestLoggerMiddleware(BaseHTTPMiddleware):
@@ -27,9 +27,18 @@ class RequestLoggerMiddleware(BaseHTTPMiddleware):
         tracking_id = request.cookies.get(settings.TRACKING_COOKIE_NAME, "-")
         client_ip = request.client.host if request.client else "-"
 
+        # Log with structured extra fields for JSON formatter
         logger.info(
-            f"rid={request_id} ip={client_ip} trk={tracking_id} "
-            f"{request.method} {request.url.path} -> {response.status_code} {duration_ms}ms"
+            f"{request.method} {request.url.path} -> {response.status_code} {duration_ms}ms",
+            extra={
+                "request_id": request_id,
+                "client_ip": client_ip,
+                "duration_ms": duration_ms,
+                "tracking_id": tracking_id,
+                "method": request.method,
+                "path": request.url.path,
+                "status": response.status_code
+            }
         )
         response.headers["X-Request-ID"] = request_id
         return response

@@ -1,0 +1,74 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: nidaan_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nidaan_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nidaan_password}
+      POSTGRES_DB: ${POSTGRES_DB:-nidaan_db}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - nidaan_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nidaan_user} -d ${POSTGRES_DB:-nidaan_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nidaan_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env.docker
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://${POSTGRES_USER:-nidaan_user}:${POSTGRES_PASSWORD:-nidaan_password}@db:5432/${POSTGRES_DB:-nidaan_db}
+    ports:
+      - "8000:8000"
+    volumes:
+      - nidaan_uploads:/app/app/uploads
+      - nidaan_reports:/app/app/static/generated_reports
+      - nidaan_logs:/app/logs
+      - nidaan_ml_models:/app/trained_models
+    networks:
+      - nidaan_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nidaan_frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    ports:
+      - "7000:7000"
+    networks:
+      - nidaan_network
+
+volumes:
+  pgdata:
+    name: nidaan_pgdata
+  nidaan_uploads:
+    name: nidaan_uploads
+  nidaan_reports:
+    name: nidaan_reports
+  nidaan_logs:
+    name: nidaan_logs
+  nidaan_ml_models:
+    name: nidaan_ml_models
+
+networks:
+  nidaan_network:
+    name: nidaan_network
+    driver: bridge

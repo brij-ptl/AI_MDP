@@ -58,7 +58,15 @@ class ModelNotAvailableException(AppException):
     error_code = "MODEL_UNAVAILABLE"
 
 
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from app.core.logging import get_logger
+
+logger = get_logger("error")
+
 async def app_exception_handler(request: Request, exc: AppException) -> JSONResponse:
+    # We do not log 404s or 401s as full errors, but warning if needed.
+    # For now, just return the response.
     return JSONResponse(
         status_code=exc.status_code,
         content={
@@ -69,8 +77,32 @@ async def app_exception_handler(request: Request, exc: AppException) -> JSONResp
         },
     )
 
+async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={
+            "success": False,
+            "error_code": "VALIDATION_ERROR",
+            "message": "Invalid request parameters.",
+            "details": exc.errors(),
+        },
+    )
+
+async def http_exception_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "success": False,
+            "error_code": f"HTTP_{exc.status_code}",
+            "message": str(exc.detail),
+            "details": {},
+        },
+    )
 
 async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    # Log the full exception on the server side securely (JSON formatter will handle traceback)
+    logger.exception(f"Unhandled server error on {request.method} {request.url.path}: {str(exc)}")
+    
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
@@ -81,7 +113,8 @@ async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONR
         },
     )
 
-
 def register_exception_handlers(app):
     app.add_exception_handler(AppException, app_exception_handler)
+    app.add_exception_handler(RequestValidationError, validation_exception_handler)
+    app.add_exception_handler(StarletteHTTPException, http_exception_handler)
     app.add_exception_handler(Exception, unhandled_exception_handler)

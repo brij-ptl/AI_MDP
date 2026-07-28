@@ -3,7 +3,6 @@ Local filesystem storage backend. Kept behind a small interface so it can be swa
 S3 / GCS later without touching calling code in the modules.
 """
 from __future__ import annotations
-import shutil
 from pathlib import Path
 
 from app.core.config import settings
