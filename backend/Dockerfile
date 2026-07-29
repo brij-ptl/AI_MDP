@@ -44,15 +44,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder /usr/local/lib/python3.11/site-packages/ /usr/local/lib/python3.11/site-packages/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
 
-# Create a non-root user for security
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+# Create a non-root user for security and allocate a home directory
+RUN groupadd -r appuser && useradd -r -g appuser -d /home/appuser -m appuser
+
+# Set environment variables to fix matplotlib, fontconfig, and gunicorn cache permission errors
+ENV HOME=/home/appuser
+ENV MPLCONFIGDIR=/tmp/matplotlib
+ENV XDG_RUNTIME_DIR=/tmp
+ENV XDG_CACHE_HOME=/tmp/.cache
 
 # Copy application source code
 COPY . .
 
 # Ensure necessary directories exist and have correct permissions
-RUN mkdir -p logs app/uploads/temp app/static/generated_reports tess_extracted \
-    && chown -R appuser:appuser /app
+RUN mkdir -p logs app/uploads/temp app/static/generated_reports tess_extracted /tmp/matplotlib /home/appuser/.cache/fontconfig \
+    && chown -R appuser:appuser /app /home/appuser /tmp/matplotlib \
+    && chmod 777 /tmp/matplotlib \
+    && chmod -R 777 /home/appuser/.cache
 
 # Switch to non-root user
 USER appuser

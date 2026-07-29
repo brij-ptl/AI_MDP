@@ -29,7 +29,7 @@ services:
     env_file:
       - .env.docker
     environment:
-      - DATABASE_URL=postgresql+psycopg2://${POSTGRES_USER:-nidaan_user}:${POSTGRES_PASSWORD:-nidaan_password}@db:5432/${POSTGRES_DB:-nidaan_db}
+      - DATABASE_URL=postgresql+psycopg2://${POSTGRES_USER:-nidaan_user}:${POSTGRES_PASSWORD:-nidaan_password}@nidaan_db:5432/${POSTGRES_DB:-nidaan_db}
     ports:
       - "8000:8000"
     volumes:
