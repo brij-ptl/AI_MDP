@@ -321,99 +321,25 @@ Full structure details: [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md)
 
 ---
 
-## Installation Guide
+## Installation & Development Guide
 
-### Prerequisites
+We provide comprehensive guides for both Docker-based deployment and bare-metal local development.
 
-| Requirement | Version | Notes |
-|---|---|---|
-| Python | 3.11+ | 3.10 may work; 3.12 untested |
-| Node.js | 18+ | 20 LTS recommended |
-| npm | 9+ | Bundled with Node |
-| Tesseract-OCR | 5.x | System binary; see OCR section |
-| Git | Any | For cloning |
+Full guide: [docs/DEVELOPMENT_GUIDE.md](./docs/DEVELOPMENT_GUIDE.md)
+Docker guide: [docs/DOCKER.md](./docs/DOCKER.md)
 
-### 1. Clone the Repository
-
+### TL;DR (Docker Setup)
 ```bash
 git clone https://github.com/your-org/AI_MDP.git
 cd AI_MDP
+docker compose up -d --build
+docker exec -it nidaan_backend python -m app.ml.training.train_all
+docker exec -it nidaan_backend python -m app.database.seed
 ```
-
-### 2. Backend Setup
-
-```bash
-cd backend
-
-# Create and activate virtual environment
-python -m venv .venv
-
-# Windows:
-.venv\Scripts\activate
-
-# Linux/macOS:
-source .venv/bin/activate
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Configure environment
-cp .env.example .env
-# Edit .env as needed (defaults work out-of-the-box for development)
-```
-
-### 3. Install Tesseract-OCR
-
-**Windows:**
-
-Download from [UB Mannheim Tesseract builds](https://github.com/UB-Mannheim/tesseract/wiki). Default install path (`C:\Program Files\Tesseract-OCR\tesseract.exe`) is auto-detected.
-
-**Ubuntu/Debian:**
-
-```bash
-sudo apt-get install tesseract-ocr tesseract-ocr-eng
-```
-
-**macOS:**
-
-```bash
-brew install tesseract
-```
-
-### 4. Train ML Models and Seed Database
-
-```bash
-cd backend
-
-# Train all 16 disease models (~30 seconds)
-# Downloads 3 real datasets from public GitHub mirrors
-python -m app.ml.training.train_all
-
-# Seed the disease reference table + default admin account
-python -m app.database.seed
-```
-
-### 5. Run the Backend
-
-```bash
-cd backend
-uvicorn app.main:app --reload --port 8000
-```
-
-API docs: **http://localhost:8000/api/docs**
-
-### 6. Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
 Application: **http://localhost:7000**
+API Docs: **http://localhost:8000/api/docs**
 
 ### Default Credentials
-
 | Account | Email | Password |
 |---|---|---|
 | Admin | `admin@precisionhealth.ai` | `Admin@12345` |
@@ -591,45 +517,22 @@ Full OCR pipeline: [docs/OCR_PIPELINE.md](./docs/OCR_PIPELINE.md)
 
 ---
 
-## Deployment Preparation
+## Deployment & Production Readiness
 
-> Full Docker and Nginx configuration is covered in separate phases.
+Nidaan+ is 100% cloud-ready. 
 
-### Pre-Deployment Checklist
-
-- [ ] Set `DEBUG=False` in `.env`
-- [ ] Set `APP_ENV=production`
-- [ ] Generate strong `JWT_SECRET_KEY` (64+ random characters)
-- [ ] Set `COOKIE_SECURE=True` (requires HTTPS)
-- [ ] Switch to MySQL or PostgreSQL
-- [ ] Configure real Razorpay production keys
-- [ ] Configure SMTP for email delivery
-- [ ] Narrow `CORS_ORIGINS` to your frontend domain
-- [ ] Change the default admin password
-- [ ] Ensure Tesseract is installed on the server
-- [ ] Verify `trained_models/` contains all 16 `.joblib` files
-
-### Branch Protection & CI/CD
-This repository is configured with automated GitHub Actions for Continuous Integration. Before deploying to production, ensure branch protection rules are enabled on the `main` branch:
-1. **Require pull request reviews** before merging.
-2. **Require status checks to pass** before merging (select `Backend CI`, `Frontend CI`, and `Test Docker Builds`).
-3. **Do not allow bypassing the above settings.**
-
-Full guide: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
+- **Deployment Guide:** [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
+- **Cloud Infrastructure & Proxy:** [docs/CLOUD_INFRASTRUCTURE.md](./docs/CLOUD_INFRASTRUCTURE.md)
+- **CI/CD Pipeline:** [docs/CI_CD.md](./docs/CI_CD.md)
+- **Production Audit Report:** [docs/PRODUCTION_READINESS_REPORT.md](./docs/PRODUCTION_READINESS_REPORT.md)
 
 ---
 
 ## Troubleshooting
 
-| Problem | Solution |
-|---|---|
-| `tesseract is not installed` | Install Tesseract; set `TESSERACT_CMD` if in custom path |
-| `CORS error` on frontend | Add `http://localhost:7000` to `CORS_ORIGINS` in `.env` |
-| `Invalid email or password` | Ensure DB is seeded; check `DATABASE_URL` |
-| `402 Prediction limit reached` | Subscribe or have admin add prediction tokens |
-| ML models not found | Run `python -m app.ml.training.train_all` |
-| Database not seeded | Run `python -m app.database.seed` |
-| `npm run dev` fails | Run `npm install` in `frontend/` |
+If you encounter issues with database connections, CORS, missing ML models, missing Tesseract-OCR, or Razorpay Authentication Failed errors, please consult the Troubleshooting Guide.
+
+Full guide: [docs/TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md)
 
 ---
 
