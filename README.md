@@ -11,6 +11,9 @@
 [![Razorpay](https://img.shields.io/badge/Razorpay-Payments-02042B?style=flat-square&logo=razorpay&logoColor=white)](https://razorpay.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](./LICENSE)
 
+[![CI/CD Pipeline](https://github.com/your-org/AI_MDP/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/AI_MDP/actions/workflows/ci.yml)
+[![Docker Build](https://github.com/your-org/AI_MDP/actions/workflows/docker.yml/badge.svg)](https://github.com/your-org/AI_MDP/actions/workflows/docker.yml)
+
 ---
 
 ## Table of Contents
@@ -605,6 +608,12 @@ Full OCR pipeline: [docs/OCR_PIPELINE.md](./docs/OCR_PIPELINE.md)
 - [ ] Change the default admin password
 - [ ] Ensure Tesseract is installed on the server
 - [ ] Verify `trained_models/` contains all 16 `.joblib` files
+
+### Branch Protection & CI/CD
+This repository is configured with automated GitHub Actions for Continuous Integration. Before deploying to production, ensure branch protection rules are enabled on the `main` branch:
+1. **Require pull request reviews** before merging.
+2. **Require status checks to pass** before merging (select `Backend CI`, `Frontend CI`, and `Test Docker Builds`).
+3. **Do not allow bypassing the above settings.**
 
 Full guide: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
 
