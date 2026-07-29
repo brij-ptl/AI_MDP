@@ -1,15 +1,14 @@
 # Nidaan+ — Production Deployment Guide
 
 > Step-by-step guide for deploying Nidaan+ to a production Linux server.
-> Docker and Nginx configuration will be covered in separate phases.
-> This guide covers manual server deployment.
 
 ---
 
 ## Table of Contents
 
+- [Deploying with Docker Compose (Recommended)](#deploying-with-docker-compose-recommended)
 - [System Requirements](#system-requirements)
-- [Server Setup](#server-setup)
+- [Server Setup (Manual)](#server-setup)
 - [Database Setup](#database-setup)
 - [Backend Deployment](#backend-deployment)
 - [Frontend Deployment](#frontend-deployment)
@@ -19,6 +18,37 @@
 - [Running in Production](#running-in-production)
 - [Pre-Launch Checklist](#pre-launch-checklist)
 - [Monitoring](#monitoring)
+
+## Deploying with Docker Compose (Recommended)
+
+The easiest and most reliable way to deploy Nidaan+ in production is using Docker Compose. The repository includes a `docker-compose.prod.yml` file which bundles the Frontend, Backend, Database, and an Nginx reverse proxy.
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-org/AI_MDP.git /opt/nidaan
+   cd /opt/nidaan
+   ```
+
+2. **Configure Environment Variables:**
+   ```bash
+   cp backend/.env.example .env.docker
+   nano .env.docker
+   # Set APP_ENV=production, DEBUG=False
+   # Configure real Razorpay production keys, SMTP credentials, and a strong JWT_SECRET_KEY
+   ```
+
+3. **Start the Production Stack:**
+   ```bash
+   docker compose -f docker-compose.prod.yml up -d --build
+   ```
+
+4. **Seed the Production Database:**
+   ```bash
+   docker exec -it nidaan_backend python -m app.ml.training.train_all
+   docker exec -it nidaan_backend python -m app.database.seed
+   ```
+
+The application is now running securely behind the internal Nginx proxy on port 80/443.
 
 ---
 

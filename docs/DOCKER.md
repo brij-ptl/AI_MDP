@@ -138,6 +138,12 @@ graph LR
    docker compose down -v
    ```
 
+6. **Update Containers (Pull latest and recreate)**
+   ```bash
+   docker compose pull
+   docker compose up -d --build
+   ```
+
 ---
 
 ## Health Check Commands
