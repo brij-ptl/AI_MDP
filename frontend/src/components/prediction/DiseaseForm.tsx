@@ -34,7 +34,7 @@ export default function DiseaseForm({ disease, fields, initialValues = {} }: { d
         <p className="mt-2 text-sm text-muted">
           Your available tokens, subscription access, and free-trial credits are exhausted. Upgrade to keep screening.
         </p>
-        <Button href="/pricing" className="mt-6">View Plans</Button>
+        <Button href="/subscription" className="mt-6">View Plans</Button>
       </div>
     );
   }
