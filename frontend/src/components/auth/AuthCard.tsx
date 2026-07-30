@@ -44,12 +44,12 @@ export default function AuthCard({ initialMode }: { initialMode: "login" | "regi
   const goRegister = () => {
     setActive(true);
     setValidationError(null);
-    router.push("/register");
+    window.history.pushState({}, "", "/register");
   };
   const goLogin = () => {
     setActive(false);
     setValidationError(null);
-    router.push("/login");
+    window.history.pushState({}, "", "/login");
   };
 
   const validateForm = (email: string, pass: string): boolean => {
@@ -107,195 +107,155 @@ export default function AuthCard({ initialMode }: { initialMode: "login" | "regi
     } finally {
       setLoading(false);
     }
-
   };
 
   return (
-    <div className={`auth-container shadow-2xl relative border border-border/80 bg-surface/90 overflow-hidden ${active ? "active" : ""}`}>
+    <div className={`auth-container ${active ? "active" : ""}`}>
       <div className="curved-shape" />
       <div className="curved-shape2" />
 
       {/* LOGIN CARD */}
-      <div className="form-box login-box z-10">
-        <h2 className="anim mb-2 text-center font-display text-2xl font-bold tracking-tight text-text">Welcome to Nidaan+</h2>
-        <p className="anim text-xs text-muted text-center mb-6">Enter your clinical authorization credentials</p>
+      <div className="form-box login-box">
+        <h2 className="form-title anim">Welcome to Nidaan+</h2>
+        <p className="form-sub anim">Enter your clinical authorization credentials</p>
 
         {validationError && !active && (
-          <div className="anim mb-4 p-3 rounded-xl border border-red-500/20 bg-red-500/10 text-xs text-red-400 text-center animate-shake">
-            {validationError}
-          </div>
+          <div className="auth-error anim">{validationError}</div>
         )}
 
-        <form onSubmit={(e) => handleSubmit(e, "login")} className="space-y-4">
-          <div className="auth-input anim">
-            <input type="email" name="email" required className="bg-bg/40 focus:ring-2 focus:ring-primary/20" />
+        <form onSubmit={(e) => handleSubmit(e, "login")} className={otpMode ? "otp-active" : ""}>
+          <div className="auth-input anim pw-field">
+            <input type="email" name="email" required placeholder=" " />
             <label>Email Address</label>
             <Mail size={16} className="field-icon" />
           </div>
 
-          {!otpMode ? (
-            <div className="auth-input anim relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                required
-                className="bg-bg/40 focus:ring-2 focus:ring-primary/20"
-              />
-              <label>Password</label>
-              <Lock size={16} className="field-icon mr-7" />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2 top-8 text-muted hover:text-primary transition-colors duration-200"
-                aria-label="Toggle password visibility"
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-          ) : (
-            <div className="auth-input anim">
-              <input
-                type="text"
-                name="otp"
-                maxLength={6}
-                value={otpText}
-                onChange={(e) => setOtpText(e.target.value.replace(/\D/g, ""))}
-                placeholder="Enter 6-digit OTP"
-                required
-                className="bg-bg/40 focus:ring-2 focus:ring-primary/20 tracking-widest text-center text-lg"
-              />
-              <KeyRound size={16} className="field-icon" />
-            </div>
-          )}
-
-          <div className="flex items-center justify-between pt-1 anim">
-            <button
-              type="button"
-              onClick={() => setOtpMode(!otpMode)}
-              className="text-xs font-semibold text-primary hover:underline"
-            >
-              {otpMode ? "Use password instead" : "Login via OTP"}
-            </button>
-            <a href="/forgot-password" className="text-xs text-muted hover:text-primary transition-colors">Forgot password?</a>
-          </div>
-
-          <div className="anim pt-2">
-            <button
-              className="auth-btn w-full flex items-center justify-center gap-2 hover:shadow-glow relative overflow-hidden"
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? (
-                <div className="h-5 w-5 animate-spin rounded-full border-2 border-bg border-t-transparent" />
-              ) : (
-                otpMode ? "Verify & Sign In" : "Sign In"
-              )}
-            </button>
-          </div>
-
-          {/* Social Logins */}
-          <div className="anim space-y-3 pt-4 border-t border-border/40">
-            <p className="text-[10px] uppercase tracking-wider text-muted text-center font-semibold">Or continue with</p>
-            <div className="grid grid-cols-3 gap-2">
-              <button type="button" className="flex items-center justify-center py-2.5 rounded-xl border border-border bg-bg/35 hover:bg-surface2 transition-all duration-200 text-text"><GoogleIcon /></button>
-              <button type="button" className="flex items-center justify-center py-2.5 rounded-xl border border-border bg-bg/35 hover:bg-surface2 transition-all duration-200 text-text"><GithubIcon /></button>
-              <button type="button" className="flex items-center justify-center py-2.5 rounded-xl border border-border bg-bg/35 hover:bg-surface2 transition-all duration-200 text-text"><AppleIcon /></button>
-            </div>
-          </div>
-
-          <p className="anim regi-link text-center text-xs text-muted mt-2">
-            Don&apos;t have an account?{" "}
-            <button type="button" onClick={goRegister} className="font-semibold text-primary hover:underline">Register</button>
-          </p>
-        </form>
-      </div>
-
-      <div className="info-content-side login-side hidden md:flex z-10 flex-col justify-center h-full w-[45%] p-10 text-right absolute right-0 top-0">
-        <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-white flex items-center justify-end gap-2"><Sparkles size={20} className="text-primary" /> Nidaan+</h2>
-        <p className="mt-3 text-xs leading-relaxed text-slate-300">
-          Unlock clinical insights, risk modeling reports, and custom medical parameter trends. Powered by certified clinical datasets.
-        </p>
-      </div>
-
-      {/* REGISTER CARD */}
-      <div className="form-box register-box z-10">
-        <h2 className="anim mb-2 text-center font-display text-2xl font-bold tracking-tight text-text">Create Health Account</h2>
-        <p className="anim text-xs text-muted text-center mb-6">Register to evaluate medical reports in seconds</p>
-
-        {validationError && active && (
-          <div className="anim mb-4 p-3 rounded-xl border border-red-500/20 bg-red-500/10 text-xs text-red-400 text-center">
-            {validationError}
-          </div>
-        )}
-
-        <form onSubmit={(e) => handleSubmit(e, "register")} className="space-y-4">
-          <div className="auth-input anim">
-            <input type="text" name="name" required className="bg-bg/40 focus:ring-2 focus:ring-primary/20" />
-            <label>Full Name</label>
-            <User size={16} className="field-icon" />
-          </div>
-
-          <div className="auth-input anim">
-            <input type="email" name="email" required className="bg-bg/40 focus:ring-2 focus:ring-primary/20" />
-            <label>Email Address</label>
-            <Mail size={16} className="field-icon" />
-          </div>
-
-          <div className="auth-input anim relative">
+          <div className="auth-input anim pw-field">
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               required
-              className="bg-bg/40 focus:ring-2 focus:ring-primary/20"
+              placeholder=" "
             />
             <label>Password</label>
-            <Lock size={16} className="field-icon mr-7" />
             <button
               type="button"
+              className="pw-toggle"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2 top-8 text-muted hover:text-primary transition-colors"
               aria-label="Toggle password visibility"
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
 
-          <div className="anim pt-2">
+          <div className="auth-input anim otp-field">
+            <input
+              type="text"
+              name="otp"
+              maxLength={6}
+              value={otpText}
+              onChange={(e) => setOtpText(e.target.value.replace(/\D/g, ""))}
+              placeholder=" "
+              required={otpMode}
+            />
+            <label>6-Digit OTP</label>
+          </div>
+
+          <div className="row-between anim">
             <button
-              className="auth-btn w-full flex items-center justify-center gap-2 hover:shadow-glow relative overflow-hidden"
-              type="submit"
-              disabled={loading}
+              type="button"
+              className="link-action"
+              onClick={() => setOtpMode(!otpMode)}
             >
-              {loading ? (
-                <div className="h-5 w-5 animate-spin rounded-full border-2 border-bg border-t-transparent" />
-              ) : (
-                "Create Account"
-              )}
+              {otpMode ? "Use password instead" : "Login via OTP"}
             </button>
+            <a href="/forgot-password" className="link-muted">Forgot password?</a>
           </div>
 
-          {/* Social Logins */}
-          <div className="anim space-y-3 pt-4 border-t border-border/40">
-            <p className="text-[10px] uppercase tracking-wider text-muted text-center font-semibold">Or register with</p>
-            <div className="grid grid-cols-3 gap-2">
-              <button type="button" className="flex items-center justify-center py-2.5 rounded-xl border border-border bg-bg/35 hover:bg-surface2 transition-all duration-200 text-text"><GoogleIcon /></button>
-              <button type="button" className="flex items-center justify-center py-2.5 rounded-xl border border-border bg-bg/35 hover:bg-surface2 transition-all duration-200 text-text"><GithubIcon /></button>
-              <button type="button" className="flex items-center justify-center py-2.5 rounded-xl border border-border bg-bg/35 hover:bg-surface2 transition-all duration-200 text-text"><AppleIcon /></button>
-            </div>
+          <button type="submit" className="auth-btn anim" disabled={loading}>
+            {loading ? "Processing..." : (otpMode ? "Verify & Sign In" : "Sign In")}
+          </button>
+
+          <div className="divider anim"><span>Or continue with</span></div>
+          <div className="social-row anim">
+            <button type="button" className="social-btn"><GoogleIcon /></button>
+            <button type="button" className="social-btn"><GithubIcon /></button>
+            <button type="button" className="social-btn"><AppleIcon /></button>
           </div>
 
-          <p className="anim regi-link text-center text-xs text-muted mt-2">
-            Already have an account?{" "}
-            <button type="button" onClick={goLogin} className="font-semibold text-primary hover:underline">Sign In</button>
+          <p className="switch-line anim">
+            Don&apos;t have an account?{" "}
+            <button type="button" onClick={goRegister}>Register</button>
           </p>
         </form>
       </div>
 
-      <div className="info-content-side register-side hidden md:flex z-10 flex-col justify-center h-full w-[45%] p-10 text-left absolute left-0 top-0 pointer-events-none">
-        <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-white flex items-center gap-2"><Sparkles size={20} className="text-primary" /> Nidaan+</h2>
-        <p className="mt-3 text-xs leading-relaxed text-slate-300">
-          Create an account and get 2 free clinical prediction credits. No credit card required.
-        </p>
+      <div className="info-content-side login-side">
+        <h2><Sparkles size={20} className="spark" /> Nidaan+</h2>
+        <p>Unlock clinical insights, risk modeling reports, and custom medical parameter trends. Powered by certified clinical datasets.</p>
+      </div>
+
+      {/* REGISTER CARD */}
+      <div className="form-box register-box">
+        <h2 className="form-title anim">Create Health Account</h2>
+        <p className="form-sub anim">Register to evaluate medical reports in seconds</p>
+
+        {validationError && active && (
+          <div className="auth-error anim">{validationError}</div>
+        )}
+
+        <form onSubmit={(e) => handleSubmit(e, "register")}>
+          <div className="auth-input anim">
+            <input type="text" name="name" required placeholder=" " />
+            <label>Full Name</label>
+            <User size={16} className="field-icon" />
+          </div>
+
+          <div className="auth-input anim">
+            <input type="email" name="email" required placeholder=" " />
+            <label>Email Address</label>
+            <Mail size={16} className="field-icon" />
+          </div>
+
+          <div className="auth-input anim">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              required
+              placeholder=" "
+            />
+            <label>Password</label>
+            <button
+              type="button"
+              className="pw-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label="Toggle password visibility"
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
+
+          <button type="submit" className="auth-btn anim" disabled={loading}>
+            {loading ? "Processing..." : "Create Account"}
+          </button>
+
+          <div className="divider anim"><span>Or register with</span></div>
+          <div className="social-row anim">
+            <button type="button" className="social-btn"><GoogleIcon /></button>
+            <button type="button" className="social-btn"><GithubIcon /></button>
+            <button type="button" className="social-btn"><AppleIcon /></button>
+          </div>
+
+          <p className="switch-line anim">
+            Already have an account?{" "}
+            <button type="button" onClick={goLogin}>Sign In</button>
+          </p>
+        </form>
+      </div>
+
+      <div className="info-content-side register-side">
+        <h2><Sparkles size={20} className="spark" /> Nidaan+</h2>
+        <p>Create an account and get 2 free clinical prediction credits. No credit card required.</p>
       </div>
     </div>
   );

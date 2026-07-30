@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nidaan+ — Predict Disease Before Symptoms Become Serious</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B0D10;
+    --surface:#12161A;
+    --surface-2:#171D22;
+    --line:#232B31;
+    --line-soft:#1A2126;
+    --paper:#F3EFE6;
+    --paper-line:#DCD5C4;
+    --text:#EAEEEF;
+    --text-on-paper:#151312;
+    --muted:#8C9AA1;
+    --muted-on-paper:#6B6357;
+    --teal:#38B2A3;
+    --teal-deep:#1B6F65;
+    --teal-dim:rgba(56,178,163,0.12);
+    --amber:#D9922F;
+    --coral:#C1554A;
+    --coral-dim:rgba(193,84,74,0.10);
+    --good:#4CAE7E;
+    --on-primary:#06110F;
+    --teal-hover:#4FC3B4;
+    --text-soft:#C4CDD1;
+    --teal-border:rgba(56,178,163,0.35);
+    --teal-glow:rgba(56,178,163,0.10);
+    --compare-good-border:rgba(56,178,163,0.4);
+    --coral-border:rgba(193,84,74,0.35);
+    --outline-border:rgba(234,238,239,0.28);
+    --cta-btn-bg:#1B6F65;
+    --cta-btn-text:#F3EFE6;
+    --cta-btn-hover:#38B2A3;
+    --nav-bg:rgba(11,13,16,0.55);
+    --font-display:'Fraunces', serif;
+    --font-body:'IBM Plex Sans', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  /* ===== LIGHT THEME — colour grading only, structure unchanged =====
+     Palette derived from the reference doc: warm paper background,
+     deep forest-green primary, muted gold accent, terracotta danger. */
+  html.light{
+    --ink:#F6F8F7;
+    --surface:#FFFFFF;
+    --surface-2:#EEF2EF;
+    --line:#DCE4E0;
+    --line-soft:#E6ECE9;
+    --paper:#14261F;
+    --paper-line:#24382F;
+    --text:#12201B;
+    --text-on-paper:#F3EFE6;
+    --muted:#5B6B66;
+    --muted-on-paper:#B9C7C0;
+    --teal:#163832;
+    --teal-deep:#0F2723;
+    --teal-dim:rgba(22,56,50,0.07);
+    --amber:#B98B4E;
+    --coral:#A6392E;
+    --coral-dim:rgba(166,57,46,0.08);
+    --good:#2F7A5C;
+    --on-primary:#F6F8F7;
+    --teal-hover:#0F2723;
+    --text-soft:#3E4A45;
+    --teal-border:rgba(22,56,50,0.28);
+    --teal-glow:rgba(22,56,50,0.06);
+    --compare-good-border:rgba(22,56,50,0.35);
+    --coral-border:rgba(166,57,46,0.3);
+    --outline-border:rgba(18,32,27,0.25);
+    --cta-btn-bg:#F3EFE6;
+    --cta-btn-text:#14261F;
+    --cta-btn-hover:#B98B4E;
+    --nav-bg:rgba(246,248,247,0.55);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    transition:background-color .25s ease, color .25s ease;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit; text-decoration:none;}
+  ul{list-style:none;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 24px;}
+  .mono{font-family:var(--font-mono);}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{content:""; width:16px; height:1px; background:var(--teal);}
+  h1,h2,h3,h4{font-family:var(--font-display); font-weight:600; letter-spacing:-0.01em;}
+  section{position:relative;}
+  .hairline{border-top:1px solid var(--line);}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-family:var(--font-body); font-weight:600; font-size:14px;
+    padding:14px 26px; border-radius:2px;
+    transition:all .18s ease; cursor:pointer; border:1px solid transparent;
+  }
+  .btn-primary{background:var(--teal); color:var(--on-primary);}
+  .btn-primary:hover{background:var(--teal-hover); transform:translateY(-1px);}
+  .btn-outline{border-color:var(--outline-border); color:var(--text);}
+  .btn-outline:hover{border-color:var(--teal); color:var(--teal);}
+  .btn-outline-dark{border-color:rgba(21,19,18,0.3); color:var(--text-on-paper);}
+  .btn-outline-dark:hover{border-color:var(--teal-deep); color:var(--teal-deep);}
+
+  /* ===== NAVBAR ===== */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    background:var(--nav-bg);
+    backdrop-filter:blur(18px) saturate(160%);
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+    transition:background-color .25s ease;
+    border-bottom:1px solid var(--line-soft);
+    box-shadow:0 1px 0 var(--line);
+  }
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; height:76px;}
+  .logo{display:flex; align-items:center; gap:9px; font-family:var(--font-display); font-weight:700; font-size:19px; color:var(--text); opacity:1;}
+  .logo .mark{width:9px; height:9px; border-radius:50%; background:var(--teal);}
+  .nav-links{display:flex; gap:32px;}
+  .nav-links a{font-size:14px; color:var(--muted); transition:color .15s;}
+  .nav-links a:hover{color:var(--text);}
+  .nav-right{display:flex; align-items:center; gap:18px;}
+  .theme-dot{
+    width:34px; height:34px; border:1px solid var(--line); border-radius:2px;
+    display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:15px;
+    background:transparent; cursor:pointer; font-family:inherit;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  .theme-dot:hover{border-color:var(--teal); color:var(--teal);}
+  @media (max-width:900px){ .nav-links{display:none;} }
+
+  /* ===== HERO ===== */
+  .hero{
+    padding:120px 0 70px;
+    background:
+      radial-gradient(ellipse 900px 400px at 50% -10%, var(--teal-glow), transparent 70%),
+      var(--ink);
+    text-align:center;
+    overflow:hidden;
+    position:relative;
+  }
+  .hero-pulse{position:absolute; top:0; left:0; right:0; height:280px; opacity:.5; pointer-events:none;}
+  .hero-pulse-line{stroke:var(--teal); transition:stroke .25s ease;}
+  .hero .wrap{max-width:820px; position:relative; z-index:2;}
+  .pill{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--font-mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--teal); border:1px solid var(--teal-border); padding:7px 16px; border-radius:100px;
+    margin-bottom:28px;
+  }
+  .pill .dot{width:6px; height:6px; border-radius:50%; background:var(--teal);}
+  h1.hero-title{
+    font-size:clamp(2.1rem, 5vw, 3.6rem);
+    line-height:1.08;
+    color:var(--text);
+  }
+  h1.hero-title em{font-style:normal; color:var(--teal);}
+  .hero p.lede{
+    max-width:620px; margin:26px auto 0;
+    font-size:17px; color:var(--text-soft); line-height:1.7;
+  }
+  .hero-ctas{display:flex; gap:14px; justify-content:center; margin-top:38px; flex-wrap:wrap;}
+  .hero-check{
+    margin-top:52px; padding-top:28px; border-top:1px solid var(--line);
+    display:grid; grid-template-columns:repeat(4,auto); gap:34px; justify-content:center;
+    font-family:var(--font-mono); font-size:12px; color:var(--muted); letter-spacing:.02em;
+  }
+  .hero-check span{color:var(--teal); margin-right:6px;}
+  @media (max-width:700px){ .hero-check{grid-template-columns:repeat(2,auto);} }
+
+  /* ===== WHY TRUST ===== */
+  .why{padding:110px 0; background:var(--surface); border-bottom:1px solid var(--line);}
+  .section-head{max-width:640px; margin:0 auto 56px; text-align:center;}
+  .section-head h2{font-size:clamp(1.7rem,3vw,2.4rem); margin-top:14px; color:var(--text);}
+  .section-head p{margin-top:16px; color:var(--muted); font-size:15px;}
+  .why-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .why-item{background:var(--surface); padding:36px 32px;}
+  .why-item .num{font-family:var(--font-mono); font-size:12px; color:var(--teal); letter-spacing:.05em;}
+  .why-item h3{font-family:var(--font-body); font-weight:600; font-size:16px; margin-top:16px; color:var(--text);}
+  .why-item p{margin-top:10px; font-size:13.5px; color:var(--muted); line-height:1.65;}
+  @media (max-width:800px){ .why-grid{grid-template-columns:1fr;} }
+
+  /* ===== STATS ===== */
+  .stats{background:var(--ink); padding:56px 0; border-bottom:1px solid var(--line);}
+  .stats-row{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px;}
+  .stat{flex:1; min-width:140px; text-align:center; padding:0 12px; border-left:1px solid var(--line);}
+  .stat:first-child{border-left:none;}
+  .stat .val{font-family:var(--font-mono); font-size:clamp(1.6rem,3vw,2.3rem); font-weight:600; color:var(--teal);}
+  .stat .lbl{margin-top:8px; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);}
+
+  /* ===== DISEASE GRID ===== */
+  .modules{padding:110px 0; background:var(--surface); border-bottom:1px solid var(--line);}
+  .module-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  .module-card{
+    border:1px solid var(--line); background:var(--surface-2); padding:22px;
+    display:flex; flex-direction:column; justify-content:space-between; min-height:190px;
+    transition:border-color .18s, transform .18s;
+  }
+  .module-card:hover{border-color:var(--teal); transform:translateY(-2px);}
+  .module-top{display:flex; align-items:flex-start; justify-content:space-between;}
+  .module-emoji{font-size:26px;}
+  .module-idx{font-family:var(--font-mono); font-size:10px; color:var(--muted);}
+  .module-card h4{font-family:var(--font-body); font-weight:600; font-size:14.5px; margin-top:14px; color:var(--text);}
+  .module-cat{
+    display:inline-block; margin-top:6px; font-family:var(--font-mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--teal);
+  }
+  .module-card .tagline{font-size:12px; color:var(--muted); margin-top:8px; line-height:1.5;}
+  .module-foot{
+    margin-top:16px; padding-top:14px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--font-mono); font-size:10.5px; color:var(--muted);
+  }
+  .module-foot .acc{color:var(--good);}
+  .module-foot .arrow{color:var(--teal);}
+  @media (max-width:960px){ .module-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:520px){ .module-grid{grid-template-columns:1fr;} }
+
+  /* ===== HOW IT WORKS ===== */
+  .how{padding:110px 0; background:var(--ink); border-bottom:1px solid var(--line);}
+  .how-line{position:relative;}
+  .how-track{position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:32px; margin-top:20px;}
+  .how-track::before{
+    content:""; position:absolute; top:24px; left:12%; right:12%; height:1px; background:var(--line);
+  }
+  .how-step{position:relative; text-align:center;}
+  .how-num{
+    width:48px; height:48px; margin:0 auto; border-radius:50%; border:1px solid var(--teal);
+    display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:14px; color:var(--teal);
+    background:var(--ink); position:relative; z-index:2;
+  }
+  .how-step h3{font-family:var(--font-body); font-weight:600; font-size:15px; margin-top:20px; color:var(--text);}
+  .how-step p{font-size:12.5px; color:var(--muted); margin-top:8px; line-height:1.6; max-width:220px; margin-left:auto; margin-right:auto;}
+  @media (max-width:800px){ .how-track{grid-template-columns:1fr 1fr;} .how-track::before{display:none;} }
+
+  /* ===== COMPARISON ===== */
+  .compare{padding:110px 0; background:var(--surface); border-bottom:1px solid var(--line);}
+  .compare-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px; max-width:900px; margin:56px auto 0;}
+  .compare-col{padding:36px; border:1px solid var(--line);}
+  .compare-col.bad{border-color:var(--coral-border); background:var(--coral-dim);}
+  .compare-col.good{border-color:var(--compare-good-border); background:var(--teal-dim);}
+  .compare-head{display:flex; align-items:center; gap:10px; margin-bottom:22px;}
+  .compare-head .tag{font-family:var(--font-mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border:1px solid currentColor;}
+  .compare-col.bad .tag{color:var(--coral);}
+  .compare-col.good .tag{color:var(--teal);}
+  .compare-col h3{font-family:var(--font-body); font-weight:600; font-size:16px; color:var(--text);}
+  .compare-col li{display:flex; gap:12px; font-size:13.5px; color:var(--muted); margin-top:16px; line-height:1.6;}
+  .compare-col li .mk{font-family:var(--font-mono); font-weight:600; flex-shrink:0;}
+  .compare-col.bad li .mk{color:var(--coral);}
+  .compare-col.good li .mk{color:var(--teal);}
+  @media (max-width:700px){ .compare-grid{grid-template-columns:1fr;} }
+
+  /* ===== EXPLAINABLE AI (signature section) ===== */
+  .xai{padding:110px 0; background:var(--ink); border-bottom:1px solid var(--line);}
+  .xai-grid{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center;}
+  .xai h2{font-size:clamp(1.6rem,3vw,2.2rem); margin-top:14px; color:var(--text); line-height:1.2;}
+  .xai > .wrap > .xai-grid > div:first-child > p{margin-top:18px; color:var(--muted); font-size:14.5px; line-height:1.7;}
+  .xai-check{margin-top:32px; display:flex; flex-direction:column; gap:20px;}
+  .xai-check-item{display:flex; gap:14px;}
+  .xai-check-item .ck{width:20px; height:20px; border:1px solid var(--teal); color:var(--teal); font-family:var(--font-mono); font-size:11px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;}
+  .xai-check-item h4{font-family:var(--font-body); font-weight:600; font-size:14px; color:var(--text);}
+  .xai-check-item p{font-size:12.5px; color:var(--muted); margin-top:4px; line-height:1.6;}
+
+  .readout{
+    border:1px solid var(--line); background:var(--surface); padding:32px;
+    position:relative;
+  }
+  .readout::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:2px;
+    background:repeating-linear-gradient(90deg, var(--teal) 0 6px, transparent 6px 12px);
+    opacity:.5;
+  }
+  .readout-title{font-family:var(--font-mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--teal);}
+  .readout-row{margin-top:22px;}
+  .readout-row .rr-top{display:flex; justify-content:space-between; font-size:12.5px;}
+  .readout-row .rr-label{color:var(--text-soft); font-family:var(--font-body);}
+  .readout-row .rr-val{font-family:var(--font-mono); font-weight:600;}
+  .readout-row .rr-val.up{color:var(--amber);}
+  .readout-row .rr-val.down{color:var(--good);}
+  .readout-bar{margin-top:8px; height:2px; background:var(--line); width:100%; overflow:hidden;}
+  .readout-bar span{display:block; height:100%;}
+  .readout-bar span.up{background:var(--amber);}
+  .readout-bar span.down{background:var(--good);}
+  .readout-note{
+    margin-top:26px; padding-top:18px; border-top:1px solid var(--line);
+    font-size:11px; color:var(--muted); font-family:var(--font-mono); line-height:1.6;
+  }
+  @media (max-width:800px){ .xai-grid{grid-template-columns:1fr;} }
+
+  /* ===== SECURITY ===== */
+  .security{padding:100px 0; background:var(--surface); border-bottom:1px solid var(--line); text-align:center;}
+  .security .wrap{max-width:760px;}
+  .security h2{font-size:clamp(1.6rem,3vw,2.2rem); margin-top:14px; color:var(--text);}
+  .security p.desc{margin-top:16px; color:var(--muted); font-size:15px; line-height:1.7;}
+  .sec-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-top:52px; text-align:left; border-top:1px solid var(--line);}
+  .sec-item{padding:28px 24px 0; border-left:1px solid var(--line);}
+  .sec-item:first-child{border-left:none;}
+  .sec-item h3{font-family:var(--font-body); font-weight:600; font-size:14.5px; display:flex; align-items:center; gap:8px; color:var(--text);}
+  .sec-item h3 .ic{color:var(--teal); font-family:var(--font-mono); font-size:12px;}
+  .sec-item p{margin-top:10px; font-size:12.5px; color:var(--muted); line-height:1.6;}
+  @media (max-width:700px){ .sec-grid{grid-template-columns:1fr;} .sec-item{border-left:none; border-top:1px solid var(--line); padding-top:24px;} }
+
+  /* ===== TESTIMONIALS ===== */
+  .reviews{padding:110px 0; background:var(--ink); border-bottom:1px solid var(--line);}
+  .review-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:56px;}
+  .review-card{background:var(--surface); padding:32px; display:flex; flex-direction:column; justify-content:space-between; min-height:230px;}
+  .review-card .q{font-family:var(--font-display); font-size:32px; color:var(--teal); line-height:1; opacity:.6;}
+  .review-card .text{font-size:13.5px; color:var(--text-soft); line-height:1.7; margin-top:8px; font-style:italic;}
+  .review-foot{margin-top:22px; padding-top:16px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:baseline;}
+  .review-foot .who{font-size:13px; font-weight:600; color:var(--text);}
+  .review-foot .loc{font-size:11px; color:var(--muted); margin-top:2px;}
+  .review-foot .rating{font-family:var(--font-mono); font-size:12px; color:var(--good);}
+  .verified{font-family:var(--font-mono); font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:var(--good); border:1px solid var(--good); padding:1px 6px; margin-left:8px;}
+  @media (max-width:900px){ .review-grid{grid-template-columns:1fr;} }
+
+  /* ===== PRICING ===== */
+  .pricing{padding:110px 0; background:var(--surface); border-bottom:1px solid var(--line);}
+  .price-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:56px;}
+  .price-card{border:1px solid var(--line); background:var(--surface-2); padding:28px; display:flex; flex-direction:column; justify-content:space-between; position:relative;}
+  .price-card.pop{border-color:var(--teal);}
+  .price-tag{position:absolute; top:-1px; right:-1px; background:var(--teal); color:var(--on-primary); font-family:var(--font-mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px;}
+  .price-card h3{font-family:var(--font-body); font-weight:600; font-size:16px; color:var(--text);}
+  .price-card .tag-line{font-size:11.5px; color:var(--muted); margin-top:8px;}
+  .price-card .amount{font-family:var(--font-mono); font-size:30px; font-weight:600; margin-top:20px; color:var(--text);}
+  .price-card .amount .per{font-family:var(--font-body); font-size:12px; color:var(--muted); font-weight:400;}
+  .price-card .limit{font-family:var(--font-mono); font-size:11px; color:var(--teal); margin-top:6px;}
+  .price-card ul{margin-top:20px; padding-top:20px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:11px;}
+  .price-card li{font-size:12px; color:var(--muted); display:flex; gap:8px; line-height:1.5;}
+  .price-card li .mk{color:var(--teal); font-family:var(--font-mono); flex-shrink:0;}
+  .price-card .btn{margin-top:26px; width:100%; font-size:12.5px; padding:11px;}
+  @media (max-width:960px){ .price-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:520px){ .price-grid{grid-template-columns:1fr;} }
+
+  /* ===== FINAL CTA (paper inversion) ===== */
+  .final-cta{padding:130px 0; background:var(--paper); color:var(--text-on-paper); text-align:center;}
+  .final-cta .wrap{max-width:620px;}
+  .final-cta h2{font-size:clamp(1.9rem,4vw,3rem); color:var(--text-on-paper); line-height:1.15;}
+  .final-cta p{margin-top:20px; color:var(--muted-on-paper); font-size:15px; line-height:1.7;}
+  .final-cta .btn-primary{background:var(--cta-btn-bg); color:var(--cta-btn-text); margin-top:38px;}
+  .final-cta .btn-primary:hover{background:var(--cta-btn-hover);}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--surface); border-top:1px solid var(--line);}
+  .foot-grid{display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; padding:72px 0 48px;}
+  .foot-brand p{margin-top:18px; font-size:13px; color:var(--muted); max-width:280px; line-height:1.7;}
+  .foot-socials{display:flex; gap:14px; margin-top:22px;}
+  .foot-socials a{width:32px; height:32px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:11px; color:var(--muted);}
+  .foot-col h4{font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--text); margin-bottom:16px;}
+  .foot-col li{margin-bottom:10px;}
+  .foot-col a{font-size:13px; color:var(--muted); transition:color .15s;}
+  .foot-col a:hover{color:var(--teal);}
+  .foot-news{border-top:1px solid var(--line); padding:36px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;}
+  .foot-news h4{font-family:var(--font-body); font-size:14px; font-weight:600; color:var(--text);}
+  .foot-news p{font-size:12px; color:var(--muted); margin-top:4px;}
+  .foot-news form{display:flex; gap:8px;}
+  .foot-news input{background:var(--surface-2); border:1px solid var(--line); padding:11px 14px; font-size:13px; color:var(--text); width:220px;}
+  .foot-news input::placeholder{color:var(--muted);}
+  .foot-news button{background:var(--teal); color:var(--on-primary); border:none; padding:11px 18px; font-size:13px; font-weight:600; cursor:pointer; transition:background .2s ease;}
+  .foot-bottom{border-top:1px solid var(--line); padding:22px 0; text-align:center; font-size:11.5px; color:var(--muted); font-family:var(--font-mono);}
+  @media (max-width:800px){ .foot-grid{grid-template-columns:1fr 1fr; gap:32px;} .foot-brand{grid-column:span 2;} }
+  @media (max-width:520px){ .foot-grid{grid-template-columns:1fr;} .foot-brand{grid-column:span 1;} }
+</style>
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="logo"><span class="mark"></span> Nidaan+</div>
+    <nav class="nav-links">
+      <a href="#">Home</a>
+      <a href="#modules">Diseases</a>
+      <a href="#">AI Symptom Checker</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#">About</a>
+      <a href="#">Blog</a>
+      <a href="#">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <button type="button" class="theme-dot" id="themeToggle" aria-label="Toggle light theme" aria-pressed="false">◐</button>
+      <a href="#" class="btn btn-primary">Sign In</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <svg class="hero-pulse" viewBox="0 0 1200 280" preserveAspectRatio="none">
+    <polyline class="hero-pulse-line" points="0,140 220,140 250,60 285,220 320,140 1200,140" fill="none" stroke-width="1.5" opacity="0.35"/>
+  </svg>
+  <div class="wrap">
+    <span class="pill"><span class="dot"></span> AI Precision Healthcare Platform</span>
+    <h1 class="hero-title">Predict Disease Before<br><em>Symptoms Become Serious.</em></h1>
+    <p class="lede">AI-powered clinical screening that helps identify health risks early using explainable machine learning models trained on trusted medical datasets.</p>
+    <div class="hero-ctas">
+      <a href="#" class="btn btn-primary">Start Free Screening →</a>
+      <a href="#modules" class="btn btn-outline">Explore Disease Modules</a>
+    </div>
+    <div class="hero-check">
+      <div><span>✓</span>Privacy First</div>
+      <div><span>✓</span>Explainable AI</div>
+      <div><span>✓</span>16 Disease Models</div>
+      <div><span>✓</span>Secure Cloud</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY TRUST NIDAAN+ ============ -->
+<section class="why">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" style="justify-content:center">Clinical Excellence</span>
+      <h2>Why Trust Nidaan+</h2>
+      <p>Designed to offer rigorous, evidence-based preliminary triage based on proven datasets.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-item"><div class="num">01 · UserCheck</div><h3>Clinical Accuracy</h3><p>Models aligned with guidelines from institutions like WHO, CDC, and the Mayo Clinic.</p></div>
+      <div class="why-item"><div class="num">02 · Brain</div><h3>Explainable AI</h3><p>Get model transparency report showcasing feature importance with SHAP &amp; LIME values.</p></div>
+      <div class="why-item"><div class="num">03 · ShieldCheck</div><h3>Privacy First</h3><p>End-to-end data encryption. Your personal health metrics are never shared or sold.</p></div>
+      <div class="why-item"><div class="num">04 · Server</div><h3>Secure Cloud</h3><p>HIPAA-ready cloud database infrastructure with granular user-controlled data rights.</p></div>
+      <div class="why-item"><div class="num">05 · Database</div><h3>Medical Dataset</h3><p>Trained and verified on anonymized, high-fidelity medical research cohorts.</p></div>
+      <div class="why-item"><div class="num">06 · Zap</div><h3>Fast Results</h3><p>Structured intake forms deliver a comprehensive health action report in under 5 minutes.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<section class="stats">
+  <div class="wrap stats-row">
+    <div class="stat"><div class="val">120K+</div><div class="lbl">Predictions Generated</div></div>
+    <div class="stat"><div class="val">16</div><div class="lbl">Disease Models</div></div>
+    <div class="stat"><div class="val">98%</div><div class="lbl">User Satisfaction</div></div>
+    <div class="stat"><div class="val">24/7</div><div class="lbl">AI Availability</div></div>
+  </div>
+</section>
+
+<!-- ============ DISEASE MODULE GRID ============ -->
+<section class="modules" id="modules">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" style="justify-content:center">Clinical Modules</span>
+      <h2>16 conditions. One intelligent platform.</h2>
+      <p>Explore our specialized prediction modules. Each leverages diagnostic criteria and lifestyle metrics.</p>
+    </div>
+    <div class="module-grid">
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">❤️</span><span class="module-idx">M01</span></div><h4>Heart Disease</h4><span class="module-cat">Cardiovascular</span><p class="tagline">Coronary risk from vitals &amp; lipid profile</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🩸</span><span class="module-idx">M02</span></div><h4>Diabetes</h4><span class="module-cat">Metabolic</span><p class="tagline">Type-2 risk from glucose &amp; metabolic markers</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🧠</span><span class="module-idx">M03</span></div><h4>Stroke Risk</h4><span class="module-cat">Neurological</span><p class="tagline">Cerebrovascular event probability</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">💓</span><span class="module-idx">M04</span></div><h4>Hypertension</h4><span class="module-cat">Cardiovascular</span><p class="tagline">Blood pressure &amp; lifestyle risk scoring</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🩺</span><span class="module-idx">M05</span></div><h4>Chronic Kidney Disease</h4><span class="module-cat">Renal</span><p class="tagline">eGFR &amp; renal function assessment</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🧬</span><span class="module-idx">M06</span></div><h4>Liver Disease</h4><span class="module-cat">Hepatic</span><p class="tagline">Hepatic enzyme &amp; bilirubin analysis</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🫀</span><span class="module-idx">M07</span></div><h4>Fatty Liver Disease</h4><span class="module-cat">Hepatic</span><p class="tagline">NAFLD risk from metabolic profile</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🎗️</span><span class="module-idx">M08</span></div><h4>Breast Cancer</h4><span class="module-cat">Oncology</span><p class="tagline">Tumor characteristic malignancy screening</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🫁</span><span class="module-idx">M09</span></div><h4>Lung Cancer Risk</h4><span class="module-cat">Oncology</span><p class="tagline">Pulmonary risk from history &amp; symptoms</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🎀</span><span class="module-idx">M10</span></div><h4>Cervical Cancer</h4><span class="module-cat">Oncology</span><p class="tagline">HPV &amp; screening history risk model</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">👨</span><span class="module-idx">M11</span></div><h4>Prostate Cancer</h4><span class="module-cat">Oncology</span><p class="tagline">PSA &amp; urinary symptom risk profile</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🦋</span><span class="module-idx">M12</span></div><h4>Thyroid Disease</h4><span class="module-cat">Endocrine</span><p class="tagline">Hormonal panel based thyroid screening</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🧠</span><span class="module-idx">M13</span></div><h4>Parkinson's Disease</h4><span class="module-cat">Neurological</span><p class="tagline">Motor &amp; voice biomarker analysis</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🧠</span><span class="module-idx">M14</span></div><h4>Alzheimer's Risk</h4><span class="module-cat">Neurological</span><p class="tagline">Cognitive &amp; lifestyle risk assessment</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">🩸</span><span class="module-idx">M15</span></div><h4>Anemia Detection</h4><span class="module-cat">Hematology</span><p class="tagline">CBC based anemia classification</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+      <div class="module-card"><div><div class="module-top"><span class="module-emoji">⚖️</span><span class="module-idx">M16</span></div><h4>Obesity Risk</h4><span class="module-cat">Metabolic</span><p class="tagline">Body composition &amp; lifestyle scoring</p></div><div class="module-foot"><span>⏱ ~3 mins <span class="acc">✓ ~96% Acc.</span></span><span class="arrow">→</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="how">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" style="justify-content:center">Triage Pipeline</span>
+      <h2>How Nidaan+ Works</h2>
+      <p>Our step-by-step interactive framework allows you to gain instant clinical insight safely.</p>
+    </div>
+    <div class="how-track">
+      <div class="how-step"><div class="how-num">01</div><h3>Create Account</h3><p>Start with 2 free credentials. Secured via session privacy safeguards.</p></div>
+      <div class="how-step"><div class="how-num">02</div><h3>Enter Symptoms</h3><p>Guided questions collect lifestyle history and current physiological indicators.</p></div>
+      <div class="how-step"><div class="how-num">03</div><h3>AI Analysis</h3><p>Machine learning models match inputs against thousands of clinical metrics.</p></div>
+      <div class="how-step"><div class="how-num">04</div><h3>Get Report</h3><p>Receive action plan, specialist referrals, and a detailed SHAP feature report.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPARISON ============ -->
+<section class="compare">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" style="justify-content:center">Comparison</span>
+      <h2>Traditional Search vs Nidaan+</h2>
+      <p>How Nidaan+ resolves the information problem of diagnostic self-evaluation.</p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-col bad">
+        <div class="compare-head"><span class="tag">Search</span><h3>Traditional Web Search</h3></div>
+        <ul>
+          <li><span class="mk">×</span>Prompts generalized panic with unweighted condition matches.</li>
+          <li><span class="mk">×</span>Does not evaluate combined clinical markers dynamically.</li>
+          <li><span class="mk">×</span>Unfiltered, heavily ad-supported medical content.</li>
+          <li><span class="mk">×</span>No personalized action guide or specialist directions.</li>
+        </ul>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-head"><span class="tag">Triage</span><h3>Nidaan+ Triage</h3></div>
+        <ul>
+          <li><span class="mk">✓</span>Calibrated confidence indexes mapping to precise risk brackets.</li>
+          <li><span class="mk">✓</span>Clinically informed intake forms mimicking a doctor's history.</li>
+          <li><span class="mk">✓</span>Explainable AI reports clarifying the specific causes of risk.</li>
+          <li><span class="mk">✓</span>Tailored physician specialist routing and physical intake checklists.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPLAINABLE AI (signature) ============ -->
+<section class="xai">
+  <div class="wrap xai-grid">
+    <div>
+      <span class="eyebrow">Algorithm Clarity</span>
+      <h2>Understand the "Why" with Explainable AI (XAI)</h2>
+      <p>We reject black-box diagnostics. Every health risk report produced by Nidaan+ includes a feature relevance output showing exactly which metrics most heavily influenced the confidence metrics.</p>
+      <div class="xai-check">
+        <div class="xai-check-item"><span class="ck">✓</span><div><h4>Confidence Score</h4><p>Granular likelihood distributions based on thousands of control patients.</p></div></div>
+        <div class="xai-check-item"><span class="ck">✓</span><div><h4>Model Transparency</h4><p>SHAP and LIME visualizations indicate specific lifestyle or diagnostic metrics.</p></div></div>
+        <div class="xai-check-item"><span class="ck">✓</span><div><h4>Medical References</h4><p>Hyperlinked reference material mapping models directly to peer-reviewed journals.</p></div></div>
+        <div class="xai-check-item"><span class="ck">✓</span><div><h4>Clinical Validation</h4><p>Backtested algorithms under physician-guided performance audits.</p></div></div>
+      </div>
+    </div>
+    <div class="readout">
+      <div class="readout-title">SHAP Insight Simulation</div>
+      <div class="readout-row"><div class="rr-top"><span class="rr-label">Systolic Blood Pressure &gt;140</span><span class="rr-val up">+18.4%</span></div><div class="readout-bar"><span class="up" style="width:55%"></span></div></div>
+      <div class="readout-row"><div class="rr-top"><span class="rr-label">Serum Cholesterol (220 mg/dL)</span><span class="rr-val up">+12.1%</span></div><div class="readout-bar"><span class="up" style="width:36%"></span></div></div>
+      <div class="readout-row"><div class="rr-top"><span class="rr-label">Cardio Exercise (5 hr/wk)</span><span class="rr-val down">−8.5%</span></div><div class="readout-bar"><span class="down" style="width:26%"></span></div></div>
+      <div class="readout-row"><div class="rr-top"><span class="rr-label">Age Factor (54 yrs)</span><span class="rr-val up">+4.2%</span></div><div class="readout-bar"><span class="up" style="width:13%"></span></div></div>
+      <div class="readout-row"><div class="rr-top"><span class="rr-label">Zero Smoking Habit</span><span class="rr-val down">−14.3%</span></div><div class="readout-bar"><span class="down" style="width:43%"></span></div></div>
+      <div class="readout-note">ⓘ Real-time models map personal clinical factors against normalized baseline cohorts.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECURITY ============ -->
+<section class="security">
+  <div class="wrap">
+    <span class="eyebrow" style="justify-content:center">Enterprise Security</span>
+    <h2>Strict Clinical Security. Guaranteed.</h2>
+    <p class="desc">Your medical metrics are extremely sensitive. We secure all inputs and analytical predictions using bank-grade protection mechanisms.</p>
+    <div class="sec-grid">
+      <div class="sec-item"><h3><span class="ic">⚿</span> Encrypted Storage</h3><p>All active database payloads undergo end-to-end AES-256 and SSL/TLS transmission encryption.</p></div>
+      <div class="sec-item"><h3><span class="ic">⛨</span> HIPAA Aligned</h3><p>System architecture strictly complies with standard HIPAA physical, network, and policy rules.</p></div>
+      <div class="sec-item"><h3><span class="ic">▤</span> FHIR Standard</h3><p>All generated logs and analytical files strictly support interoperable FHIR format specs.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" style="justify-content:center">Testimonials</span>
+      <h2>Premium Patient Feedback</h2>
+      <p>Hear from some of our verified health consumers who caught metrics ahead of schedules.</p>
+    </div>
+    <div class="review-grid">
+      <div class="review-card"><div><div class="q">&ldquo;</div><p class="text">Nidaan+ helped identify my diabetes risk early. The report was clear enough to discuss with my doctor.</p></div><div class="review-foot"><div><div class="who">Aditya V.<span class="verified">Verified</span></div><div class="loc">Mumbai</div></div><div class="rating">5.0</div></div></div>
+      <div class="review-card"><div><div class="q">&ldquo;</div><p class="text">The explainable AI breakdown showing factor importance helped me realize my salt intake was directly spiking metrics.</p></div><div class="review-foot"><div><div class="who">Raman K.<span class="verified">Verified</span></div><div class="loc">Delhi</div></div><div class="rating">5.0</div></div></div>
+      <div class="review-card"><div><div class="q">&ldquo;</div><p class="text">Unbelievably simple OCR report scan. It filled out the complex kidney marker form automatically in seconds.</p></div><div class="review-foot"><div><div class="who">Priya S.<span class="verified">Verified</span></div><div class="loc">Bangalore</div></div><div class="rating">5.0</div></div></div>
+      <div class="review-card"><div><div class="q">&ldquo;</div><p class="text">A necessary preliminary check before scheduling a specialist. It helped calm my anxiety with actual data.</p></div><div class="review-foot"><div><div class="who">Sunita G.<span class="verified">Verified</span></div><div class="loc">Chennai</div></div><div class="rating">5.0</div></div></div>
+      <div class="review-card"><div><div class="q">&ldquo;</div><p class="text">Clean, Stripe-level experience. No ads or spam, just high-fidelity clinical model reporting.</p></div><div class="review-foot"><div><div class="who">Vikram R.<span class="verified">Verified</span></div><div class="loc">Pune</div></div><div class="rating">5.0</div></div></div>
+      <div class="review-card"><div><div class="q">&ldquo;</div><p class="text">The premium subscription was worth every rupee for my parents. We monitor their cardiovascular health monthly.</p></div><div class="review-foot"><div><div class="who">Dr. Anil B.<span class="verified">Verified</span></div><div class="loc">Hyderabad</div></div><div class="rating">5.0</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" style="justify-content:center">Simple, affordable pricing</span>
+      <h2>Plans built for everyday patients</h2>
+      <p>All pricing cards have equal value. Select the plan tailored to your tracking requirements.</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card">
+        <div><h3>Starter</h3><p class="tag-line">For individuals trying AI screening</p><p class="amount">₹49<span class="per">/month</span></p><p class="limit">20 predictions / month</p>
+        <ul>
+          <li><span class="mk">✓</span>20 disease predictions / month</li>
+          <li><span class="mk">✓</span>AI Symptom Checker access</li>
+          <li><span class="mk">✓</span>Downloadable PDF reports</li>
+          <li><span class="mk">✓</span>Email support</li>
+        </ul></div>
+        <a href="#" class="btn btn-outline">Choose Starter</a>
+      </div>
+      <div class="price-card pop"><div class="price-tag">Most Popular</div>
+        <div><h3>Care+</h3><p class="tag-line">Best for regular health monitoring</p><p class="amount">₹149<span class="per">/month</span></p><p class="limit">Unlimited predictions</p>
+        <ul>
+          <li><span class="mk">✓</span>Unlimited disease predictions</li>
+          <li><span class="mk">✓</span>OCR medical report upload</li>
+          <li><span class="mk">✓</span>Explainable AI insights</li>
+          <li><span class="mk">✓</span>Priority email + chat support</li>
+          <li><span class="mk">✓</span>Health analytics dashboard</li>
+        </ul></div>
+        <a href="#" class="btn btn-primary">Choose Care+</a>
+      </div>
+      <div class="price-card">
+        <div><h3>Family</h3><p class="tag-line">Whole family, one plan</p><p class="amount">₹399<span class="per">/3 months</span></p><p class="limit">Unlimited · up to 4 members</p>
+        <ul>
+          <li><span class="mk">✓</span>Everything in Care+</li>
+          <li><span class="mk">✓</span>Up to 4 family member profiles</li>
+          <li><span class="mk">✓</span>Shared health history vault</li>
+          <li><span class="mk">✓</span>Specialist recommendation engine</li>
+        </ul></div>
+        <a href="#" class="btn btn-outline">Choose Family</a>
+      </div>
+      <div class="price-card">
+        <div><h3>Annual</h3><p class="tag-line">Maximum savings, year-round care</p><p class="amount">₹999<span class="per">/year</span></p><p class="limit">Unlimited predictions</p>
+        <ul>
+          <li><span class="mk">✓</span>Everything in Care+</li>
+          <li><span class="mk">✓</span>2 months free vs monthly billing</li>
+          <li><span class="mk">✓</span>Early access to new disease modules</li>
+          <li><span class="mk">✓</span>Dedicated support line</li>
+        </ul></div>
+        <a href="#" class="btn btn-outline">Choose Annual</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final-cta">
+  <div class="wrap">
+    <h2>Your Health,<br>Decoded by Clinical AI.</h2>
+    <p>Join thousands using Nidaan+ to identify risks early, organize lab reports, and manage wellness targets.</p>
+    <a href="#" class="btn btn-primary">Create Free Account</a>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <div class="logo"><span class="mark"></span> Nidaan+</div>
+      <p>Nidaan+ is a clinical-grade AI-powered multi-disease prediction and triage platform. Informational only, not a substitute for professional medical advice.</p>
+      <div class="foot-socials">
+        <a href="#">X</a><a href="#">in</a><a href="#">gh</a><a href="#">st</a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#">Diseases</a></li>
+        <li><a href="#">Symptom Checker</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#">API Docs</a></li>
+        <li><a href="#">Documentation</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Legal &amp; Support</h4>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+        <li><a href="#">Support Center</a></li>
+        <li><a href="#">System Status</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap foot-news">
+    <div>
+      <h4>Subscribe to our newsletter</h4>
+      <p>Get clinical AI updates and preventative health insights.</p>
+    </div>
+    <form onsubmit="return false;">
+      <input type="email" placeholder="Enter your email" required />
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+  <div class="foot-bottom">© 2026 Nidaan+. Built to medical-grade AI compliance specifications.</div>
+</footer>
+
+
+<script>
+  var toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', function(){
+    var isLight = document.documentElement.classList.toggle('light');
+    toggle.textContent = isLight ? '◑' : '◐';
+    toggle.setAttribute('aria-pressed', String(isLight));
+  });
+</script>
+</body>
+</html>

@@ -130,7 +130,7 @@ export default function ProfilePage() {
   return (
     <>
       <DashboardTopbar title="Clinical Profile" />
-      <div className="p-6 lg:p-10 space-y-8 bg-bg min-h-screen pb-24">
+      <div className="p-6 lg:p-10 space-y-8 bg-bg min-h-screen pb-24 animate-fadeIn">
         {/* Upper Profile Box */}
         <div className="rounded-2xl border border-border bg-surface p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">

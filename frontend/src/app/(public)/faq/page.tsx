@@ -2,7 +2,7 @@ import Container from "@/components/ui/Container";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const FAQS = [
-  ["Is Vitalis AI a replacement for a doctor?", "No. It's a screening and early-risk tool. Always confirm results with a licensed physician."],
+  ["Is Nidaan+ a replacement for a doctor?", "No. It's a screening and early-risk tool. Always confirm results with a licensed physician."],
   ["How many free predictions do I get?", "Every new account gets 2 free predictions across any disease module before a subscription is required."],
   ["What happens to my medical data?", "Your data is encrypted and used only to generate your prediction and report — never sold to third parties."],
   ["Can I cancel my subscription anytime?", "Yes, subscriptions can be cancelled anytime from Settings → Subscription."],

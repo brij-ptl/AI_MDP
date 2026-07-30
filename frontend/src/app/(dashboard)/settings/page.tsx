@@ -33,7 +33,7 @@ export default function SettingsPage() {
   return (
     <>
       <DashboardTopbar title="Settings" />
-      <div className="p-6 lg:p-10 space-y-8 bg-bg min-h-screen pb-24">
+      <div className="p-6 lg:p-10 space-y-8 bg-bg min-h-screen pb-24 animate-fadeIn">
         {/* Navigation Tabs */}
         <div className="flex border-b border-border">
           {[

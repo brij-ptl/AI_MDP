@@ -69,7 +69,8 @@ def generate_prediction_report_pdf(prediction, user_name: str) -> bytes:
     doc = new_document(buffer)
     story = []
 
-    story.append(Paragraph("AI Precision Healthcare Platform", styles["BrandTitle"]))
+    story.append(Paragraph("Nidaan+", styles["BrandTitle"]))
+    story.append(Paragraph("AI-Enabled Multi-Disease Prediction and Precision Healthcare Platform", styles["SectionHeading"]))
     story.append(Paragraph(f"{cfg['name']} — AI Risk Assessment Report", styles["SectionHeading"]))
     story.append(divider())
 

@@ -22,3 +22,5 @@ class SymptomCheckResponse(BaseModel):
     possible_diseases: list[PossibleDisease]
     next_steps: list[str]
     disclaimer: str
+    doctor_explanation: str | None = None
+    prediction_id: str | None = None

@@ -14,14 +14,15 @@ def handle_check(db: Session, user: User, text: str) -> dict:
     if analysis["possible_diseases"]:
         top = analysis["possible_diseases"][0]
         risk_level = "High Risk" if top["confidence"] >= 0.7 else "Moderate Risk" if top["confidence"] >= 0.4 else "Low Risk"
-        symptom_repo.save_symptom_check(
+        prediction = symptom_repo.save_symptom_check(
             db, user_id=user.id, disease_slug=top["slug"], input_type="symptom_text",
             input_features={"symptom_text": text}, prediction_label="Possible Match",
             probability=top["confidence"], risk_level=risk_level, confidence_score=top["confidence"],
-            feature_importance=None, doctor_explanation=None,
+            feature_importance=None, doctor_explanation=analysis.get("doctor_explanation"),
             recommended_tests=top["recommended_tests"], recommended_specialist=top["recommended_specialist"],
             recommendations=analysis["next_steps"], model_version="symptom-kb-1.0",
         )
+        analysis["prediction_id"] = prediction.id
 
     sub_service.consume_symptom_check_credit(db, user)
     return analysis

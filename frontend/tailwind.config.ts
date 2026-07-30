@@ -25,8 +25,9 @@ const config: Config = {
         text: "rgb(var(--color-text) / <alpha-value>)",
       },
       fontFamily: {
-        sans: ["Plus Jakarta Sans", "Inter", "system-ui", "sans-serif"],
-        display: ["Sora", "system-ui", "sans-serif"],
+        sans: ["IBM Plex Sans", "Plus Jakarta Sans", "Inter", "system-ui", "sans-serif"],
+        display: ["Fraunces", "Sora", "system-ui", "sans-serif"],
+        mono: ["IBM Plex Mono", "monospace"],
       },
       boxShadow: {
         glow: "0 0 25px rgb(var(--color-primary) / 0.35)",

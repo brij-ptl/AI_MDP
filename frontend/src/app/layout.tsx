@@ -7,9 +7,9 @@ import CookieBanner from "@/components/common/CookieBanner";
 import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
-  title: "Nidaan+",
+  title: "Nidaan+ — Predict Disease Before Symptoms Become Serious",
   description:
-    "",
+    "Clinical-grade AI-powered multi-disease prediction and triage platform.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

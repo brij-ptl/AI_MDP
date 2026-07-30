@@ -27,7 +27,7 @@ const LINKS = [
 export default function DashboardSidebar() {
   const pathname = usePathname();
   return (
-    <aside className="hidden w-64 shrink-0 border-r border-border bg-surface/60 lg:flex lg:flex-col">
+    <aside className="hidden w-64 shrink-0 border-r border-border bg-surface lg:flex lg:flex-col">
       <div className="flex h-20 items-center border-b border-border px-6">
         <Logo />
       </div>
@@ -40,11 +40,14 @@ export default function DashboardSidebar() {
               key={link.href}
               href={link.href}
               className={cn(
-                "flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface2 hover:text-text",
-                active && "bg-primary/10 text-primary"
+                "group flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 border border-transparent",
+                active 
+                  ? "bg-surface2 text-primary border-l-primary/40 shadow-sm" 
+                  : "text-muted hover:bg-surface2 hover:text-text hover:border-border"
               )}
             >
-              <Icon size={18} /> {link.label}
+              <Icon size={18} className={active ? "text-primary" : "text-muted group-hover:text-primary transition-colors"} /> 
+              {link.label}
             </Link>
           );
         })}
