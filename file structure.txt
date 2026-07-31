@@ -1,0 +1,507 @@
+File Architecture
+AI-Healthcare-Platform/
+
+│
+├── frontend/
+│
+├── backend/
+│
+├── docs/
+│
+├── README.md
+│
+├── LICENSE
+│
+└── .gitignore
+
+
+
+
+
+
+Frontend File Architecture
+frontend/
+│
+├── public/
+│   ├── images/
+│   ├── icons/
+│   ├── logos/
+│   ├── fonts/
+│   ├── favicon.ico
+│   └── manifest.json
+│
+├── src/
+│
+│   ├── app/
+│   │
+│   │   ├── (public)/
+│   │   │
+│   │   │   ├── page.tsx                    // Home
+│   │   │   ├── about/
+│   │   │   │   └── page.tsx
+│   │   │   ├── contact/
+│   │   │   │   └── page.tsx
+│   │   │   ├── pricing/
+│   │   │   │   └── page.tsx
+│   │   │   ├── faq/
+│   │   │   │   └── page.tsx
+│   │   │   ├── blog/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── [slug]/
+│   │   │   │       └── page.tsx
+│   │   │   ├── diseases/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── [disease]/
+│   │   │   │       └── page.tsx
+│   │   │   ├── privacy-policy/
+│   │   │   │   └── page.tsx
+│   │   │   ├── terms/
+│   │   │   │   └── page.tsx
+│   │   │   └── cookies/
+│   │   │       └── page.tsx
+│   │
+│   │   ├── (auth)/
+│   │   │
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx
+│   │   │   ├── register/
+│   │   │   │   └── page.tsx
+│   │   │   ├── forgot-password/
+│   │   │   │   └── page.tsx
+│   │   │   ├── reset-password/
+│   │   │   │   └── page.tsx
+│   │   │   └── verify-email/
+│   │   │       └── page.tsx
+│   │
+│   │   ├── (dashboard)/
+│   │   │
+│   │   │   ├── dashboard/
+│   │   │   │   └── page.tsx
+│   │   │   ├── prediction/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── [disease]/
+│   │   │   │       └── page.tsx
+│   │   │   ├── symptom-checker/
+│   │   │   │   └── page.tsx
+│   │   │   ├── upload-report/
+│   │   │   │   └── page.tsx
+│   │   │   ├── reports/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx
+│   │   │   ├── history/
+│   │   │   │   └── page.tsx
+│   │   │   ├── analytics/
+│   │   │   │   └── page.tsx
+│   │   │   ├── profile/
+│   │   │   │   └── page.tsx
+│   │   │   ├── settings/
+│   │   │   │   └── page.tsx
+│   │   │   ├── notifications/
+│   │   │   │   └── page.tsx
+│   │   │   ├── subscription/
+│   │   │   │   └── page.tsx
+│   │   │   └── payment/
+│   │   │       └── page.tsx
+│   │
+│   │   ├── (admin)/
+│   │   │
+│   │   │   ├── dashboard/
+│   │   │   │   └── page.tsx
+│   │   │   ├── users/
+│   │   │   │   └── page.tsx
+│   │   │   ├── diseases/
+│   │   │   │   └── page.tsx
+│   │   │   ├── models/
+│   │   │   │   └── page.tsx
+│   │   │   ├── datasets/
+│   │   │   │   └── page.tsx
+│   │   │   ├── payments/
+│   │   │   │   └── page.tsx
+│   │   │   ├── subscriptions/
+│   │   │   │   └── page.tsx
+│   │   │   ├── feedback/
+│   │   │   │   └── page.tsx
+│   │   │   ├── analytics/
+│   │   │   │   └── page.tsx
+│   │   │   └── logs/
+│   │   │       └── page.tsx
+│   │
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── loading.tsx
+│   │   ├── error.tsx
+│   │   ├── not-found.tsx
+│   │   └── globals.css
+│
+│   ├── components/
+│   │
+│   │   ├── layout/
+│   │   ├── ui/
+│   │   ├── auth/
+│   │   ├── dashboard/
+│   │   ├── prediction/
+│   │   ├── symptom/
+│   │   ├── ocr/
+│   │   ├── reports/
+│   │   ├── charts/
+│   │   ├── profile/
+│   │   ├── payment/
+│   │   ├── admin/
+│   │   └── common/
+│
+│   ├── services/
+│   │
+│   │   ├── api.ts
+│   │   ├── auth.service.ts
+│   │   ├── prediction.service.ts
+│   │   ├── symptom.service.ts
+│   │   ├── ocr.service.ts
+│   │   ├── report.service.ts
+│   │   ├── dashboard.service.ts
+│   │   ├── payment.service.ts
+│   │   ├── notification.service.ts
+│   │   └── admin.service.ts
+│
+│   ├── hooks/
+│   │
+│   ├── context/
+│   │
+│   ├── store/
+│   │
+│   ├── lib/
+│   │
+│   ├── utils/
+│   │
+│   ├── types/
+│   │
+│   ├── constants/
+│   │
+│   ├── providers/
+│   │
+│   ├── middleware/
+│   │
+│   ├── config/
+│   │
+│   └── assets/
+│
+├── package.json
+├── tsconfig.json
+├── next.config.ts
+├── tailwind.config.ts
+├── postcss.config.js
+└── .env.local
+
+
+
+
+
+
+
+
+
+
+
+
+Backend File Architecture
+
+backend/
+│
+├── app/
+│   │
+│   ├── main.py                         # FastAPI application entry point
+│   ├── __init__.py
+│   │
+│   ├── api/                            # Global API registration
+│   │   ├── router.py
+│   │   └── __init__.py
+│   │
+│   ├── core/                           # Core application configuration
+│   │   ├── config.py
+│   │   ├── security.py
+│   │   ├── dependencies.py
+│   │   ├── constants.py
+│   │   ├── exceptions.py
+│   │   ├── logging.py
+│   │   └── startup.py
+│   │
+│   ├── middleware/
+│   │   ├── auth.py
+│   │   ├── cors.py
+│   │   ├── rate_limit.py
+│   │   ├── logging.py
+│   │   └── request_logger.py
+│   │
+│   ├── database/
+│   │   ├── database.py
+│   │   ├── session.py
+│   │   ├── base.py
+│   │   ├── init_db.py
+│   │   ├── seed.py
+│   │   │
+│   │   ├── models/
+│   │   │   ├── user.py
+│   │   │   ├── medical_profile.py
+│   │   │   ├── prediction.py
+│   │   │   ├── disease.py
+│   │   │   ├── report.py
+│   │   │   ├── payment.py
+│   │   │   ├── subscription.py
+│   │   │   ├── notification.py
+│   │   │   ├── feedback.py
+│   │   │   └── admin.py
+│   │   │
+│   │   └── migrations/
+│   │
+│   ├── schemas/
+│   │   ├── auth.py
+│   │   ├── user.py
+│   │   ├── medical_profile.py
+│   │   ├── prediction.py
+│   │   ├── disease.py
+│   │   ├── report.py
+│   │   ├── payment.py
+│   │   ├── subscription.py
+│   │   ├── notification.py
+│   │   ├── symptom.py
+│   │   ├── ocr.py
+│   │   └── feedback.py
+│   │
+│   ├── modules/
+│   │
+│   │   ├── auth/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   ├── repository.py
+│   │   │   ├── validators.py
+│   │   │   ├── dependencies.py
+│   │   │   └── exceptions.py
+│   │   │
+│   │   ├── users/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   ├── repository.py
+│   │   │   └── validators.py
+│   │   │
+│   │   ├── dashboard/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   └── repository.py
+│   │   │
+│   │   ├── prediction/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   ├── repository.py
+│   │   │   ├── validators.py
+│   │   │   ├── dependencies.py
+│   │   │   ├── exceptions.py
+│   │   │   ├── prediction_engine.py
+│   │   │   ├── model_registry.py
+│   │   │   └── response_builder.py
+│   │   │
+│   │   ├── symptom_checker/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   ├── repository.py
+│   │   │   └── validators.py
+│   │   │
+│   │   ├── ocr/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   └── repository.py
+│   │   │
+│   │   ├── recommendation/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   └── repository.py
+│   │   │
+│   │   ├── reports/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   ├── repository.py
+│   │   │   └── pdf_generator.py
+│   │   │
+│   │   ├── history/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   └── repository.py
+│   │   │
+│   │   ├── notifications/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   └── repository.py
+│   │   │
+│   │   ├── subscription/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   └── repository.py
+│   │   │
+│   │   ├── payment/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   ├── repository.py
+│   │   │   ├── razorpay.py
+│   │   │   └── webhook.py
+│   │   │
+│   │   ├── analytics/
+│   │   │   ├── router.py
+│   │   │   ├── controller.py
+│   │   │   ├── service.py
+│   │   │   └── repository.py
+│   │   │
+│   │   └── admin/
+│   │       ├── router.py
+│   │       ├── controller.py
+│   │       ├── service.py
+│   │       ├── repository.py
+│   │       └── validators.py
+│   │
+│   ├── services/                      # Shared services
+│   │   ├── email_service.py
+│   │   ├── pdf_service.py
+│   │   ├── storage_service.py
+│   │   ├── jwt_service.py
+│   │   ├── password_service.py
+│   │   ├── notification_service.py
+│   │   ├── cache_service.py
+│   │   └── file_service.py
+│   │
+│   ├── ml/
+│   │   ├── common/
+│   │   │   ├── base_model.py
+│   │   │   ├── base_predictor.py
+│   │   │   ├── base_preprocessor.py
+│   │   │   ├── metrics.py
+│   │   │   ├── constants.py
+│   │   │   └── exceptions.py
+│   │   │
+│   │   ├── registry/
+│   │   │   ├── model_registry.py
+│   │   │   ├── model_loader.py
+│   │   │   ├── model_factory.py
+│   │   │   └── disease_mapper.py
+│   │   │
+│   │   ├── preprocessing/
+│   │   │   ├── cleaning.py
+│   │   │   ├── encoding.py
+│   │   │   ├── scaling.py
+│   │   │   └── feature_engineering.py
+│   │   │
+│   │   ├── training/
+│   │   │   ├── train_all.py
+│   │   │   ├── cross_validation.py
+│   │   │   └── hyperparameter_tuning.py
+│   │   │
+│   │   ├── inference/
+│   │   │   ├── predictor.py
+│   │   │   └── pipeline.py
+│   │   │
+│   │   ├── evaluation/
+│   │   │   ├── metrics.py
+│   │   │   └── evaluator.py
+│   │   │
+│   │   ├── explainable_ai/
+│   │   │   ├── shap.py
+│   │   │   ├── lime.py
+│   │   │   └── feature_importance.py
+│   │   │
+│   │   └── diseases/
+│   │       ├── heart/
+│   │       ├── diabetes/
+│   │       ├── stroke/
+│   │       ├── hypertension/
+│   │       ├── kidney/
+│   │       ├── liver/
+│   │       ├── fatty_liver/
+│   │       ├── breast_cancer/
+│   │       ├── lung_cancer/
+│   │       ├── cervical_cancer/
+│   │       ├── prostate_cancer/
+│   │       ├── thyroid/
+│   │       ├── parkinsons/
+│   │       ├── alzheimers/
+│   │       ├── anemia/
+│   │       └── obesity/
+│   │
+│   ├── utils/
+│   │   ├── helpers.py
+│   │   ├── validators.py
+│   │   ├── file_utils.py
+│   │   ├── date_utils.py
+│   │   └── response.py
+│   │
+│   ├── templates/
+│   │   ├── pdf/
+│   │   └── emails/
+│   │
+│   ├── uploads/
+│   │   ├── reports/
+│   │   ├── images/
+│   │   └── temp/
+│   │
+│   └── static/
+│       ├── logos/
+│       ├── icons/
+│       └── generated_reports/
+│
+├── trained_models/
+│   ├── heart/
+│   ├── diabetes/
+│   ├── stroke/
+│   ├── hypertension/
+│   ├── kidney/
+│   ├── liver/
+│   ├── fatty_liver/
+│   ├── breast_cancer/
+│   ├── lung_cancer/
+│   ├── cervical_cancer/
+│   ├── prostate_cancer/
+│   ├── thyroid/
+│   ├── parkinsons/
+│   ├── alzheimers/
+│   ├── anemia/
+│   └── obesity/
+│
+├── datasets/
+│   ├── heart/
+│   ├── diabetes/
+│   ├── stroke/
+│   ├── hypertension/
+│   ├── kidney/
+│   ├── liver/
+│   ├── fatty_liver/
+│   ├── breast_cancer/
+│   ├── lung_cancer/
+│   ├── cervical_cancer/
+│   ├── prostate_cancer/
+│   ├── thyroid/
+│   ├── parkinsons/
+│   ├── alzheimers/
+│   ├── anemia/
+│   └── obesity/
+│
+├── tests/
+│   ├── api/
+│   ├── auth/
+│   ├── prediction/
+│   ├── ocr/
+│   ├── symptom_checker/
+│   ├── ml/
+│   └── integration/
+│
+├── requirements.txt
+├── .env
+├── .gitignore
+└── README.md
