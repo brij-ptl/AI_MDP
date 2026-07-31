@@ -50,8 +50,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await authService.logout();
     } finally {
-      Cookies.remove("vitalis_predictions_used");
-      Cookies.remove("vitalis_subscribed");
+      Cookies.remove("nidaan_predictions_used");
+      Cookies.remove("nidaan_subscribed");
       window.localStorage.clear();
       window.sessionStorage.clear();
       setUser(null);

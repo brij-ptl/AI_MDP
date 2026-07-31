@@ -15,7 +15,7 @@ export default function DashboardTopbar({ title }: { title: string }) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setIsSubscribed(Cookies.get("vitalis_subscribed") === "true");
+    setIsSubscribed(Cookies.get("nidaan_subscribed") === "true");
   }, []);
 
   useEffect(() => {

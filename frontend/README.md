@@ -1,4 +1,4 @@
-# Vitalis AI — Frontend
+# Nidaan+ — Frontend
 
 Next.js 15 (App Router) + TypeScript + Tailwind CSS frontend for the AI Precision
 Healthcare Platform, built to the file architecture you provided.

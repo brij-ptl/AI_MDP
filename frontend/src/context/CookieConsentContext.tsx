@@ -23,21 +23,21 @@ export function CookieConsentProvider({ children }: { children: React.ReactNode 
   const [consent, setConsent] = useState<"accepted" | "declined" | null>(null);
 
   useEffect(() => {
-    const existing = Cookies.get("vitalis_consent") as "accepted" | "declined" | undefined;
+    const existing = Cookies.get("nidaan_consent") as "accepted" | "declined" | undefined;
     setConsent(existing ?? null);
 
-    if (!Cookies.get("vitalis_visitor_id")) {
+    if (!Cookies.get("nidaan_visitor_id")) {
       const id = crypto.randomUUID();
-      Cookies.set("vitalis_visitor_id", id, { expires: 365 });
+      Cookies.set("nidaan_visitor_id", id, { expires: 365 });
     }
   }, []);
 
   const acceptCookies = () => {
-    Cookies.set("vitalis_consent", "accepted", { expires: 365 });
+    Cookies.set("nidaan_consent", "accepted", { expires: 365 });
     setConsent("accepted");
   };
   const declineCookies = () => {
-    Cookies.set("vitalis_consent", "declined", { expires: 365 });
+    Cookies.set("nidaan_consent", "declined", { expires: 365 });
     setConsent("declined");
   };
 

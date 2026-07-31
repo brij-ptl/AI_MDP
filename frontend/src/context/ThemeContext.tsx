@@ -14,7 +14,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
-    const stored = (typeof window !== "undefined" && localStorage.getItem("vitalis_theme")) as Theme | null;
+    const stored = (typeof window !== "undefined" && localStorage.getItem("nidaan_theme")) as Theme | null;
     if (stored) setTheme(stored);
   }, []);
 
@@ -22,7 +22,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const root = document.documentElement;
     if (theme === "light") root.classList.add("light");
     else root.classList.remove("light");
-    localStorage.setItem("vitalis_theme", theme);
+    localStorage.setItem("nidaan_theme", theme);
   }, [theme]);
 
   const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
