@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import ThemeToggle from "@/components/common/ThemeToggle";
+import Logo from "@/components/common/Logo";
 
 export default function Navbar() {
   return (
     <header className="nav">
       <div className="wrap nav-inner">
-        <div className="logo"><span className="mark"></span> Nidaan+</div>
+        <Logo />
         <nav className="nav-links">
           <Link href="/">Home</Link>
           <Link href="/#modules">Diseases</Link>

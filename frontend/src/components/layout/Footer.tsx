@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import Logo from "@/components/common/Logo";
 
 export default function Footer() {
   return (
     <footer>
       <div className="wrap foot-grid">
         <div className="foot-brand">
-          <div className="logo"><span className="mark"></span> Nidaan+</div>
+          <Logo />
           <p>Nidaan+ is a clinical-grade AI-powered multi-disease prediction and triage platform. Informational only, not a substitute for professional medical advice.</p>
           <div className="foot-socials">
             <a href="#">X</a><a href="#">in</a><a href="#">gh</a><a href="#">st</a>
