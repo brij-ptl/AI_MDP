@@ -1,9 +1,9 @@
 import Link from "next/link";
 import React from "react";
 
-export default function Logo() {
+export default function Logo({ className }: { className?: string }) {
   return (
-    <Link href="/" className="logo select-none">
+    <Link href="/" className={`logo select-none ${className || ''}`}>
       <svg 
         className="mark-svg" 
         viewBox="0 0 64 64" 

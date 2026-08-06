@@ -2,9 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { User, Lock, Mail, Eye, EyeOff, Sparkles, KeyRound } from "lucide-react";
+import { User, Lock, Mail, Eye, EyeOff, KeyRound } from "lucide-react";
 import { authService } from "@/services/auth.service";
 import { useAuth } from "@/context/AuthContext";
+import Logo from "@/components/common/Logo";
 
 // Custom Google SVG Logo
 const GoogleIcon = () => (
@@ -191,7 +192,7 @@ export default function AuthCard({ initialMode }: { initialMode: "login" | "regi
       </div>
 
       <div className="info-content-side login-side">
-        <h2><Sparkles size={20} className="spark" /> Nidaan+</h2>
+        <h2><Logo className="auth-logo-override" /></h2>
         <p>Unlock clinical insights, risk modeling reports, and custom medical parameter trends. Powered by certified clinical datasets.</p>
       </div>
 
@@ -254,7 +255,7 @@ export default function AuthCard({ initialMode }: { initialMode: "login" | "regi
       </div>
 
       <div className="info-content-side register-side">
-        <h2><Sparkles size={20} className="spark" /> Nidaan+</h2>
+        <h2><Logo className="auth-logo-override" /></h2>
         <p>Create an account and get 2 free clinical prediction credits. No credit card required.</p>
       </div>
     </div>
